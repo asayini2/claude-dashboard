@@ -1,0 +1,2542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="Private portfolio.">
+<meta name="theme-color" content="#1e1f22">
+<title>Aryan Sayini's Portfolio</title>
+
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   1 — TOKENS
+   Light is the default. Dark applies from system preference unless
+   the visitor has explicitly chosen light, and always when they've
+   explicitly chosen dark.
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  color-scheme: light dark;
+
+  --bg:          #ffffff;
+  --bg-alt:      #f5f5f7;
+  --bg-elev:     #ffffff;
+  --bg-sunken:   #fbfbfd;
+
+  --text:        #1d1d1f;
+  --text-2:      #6e6e73;
+  --text-3:      #86868b;
+
+  --line:        rgba(0,0,0,0.12);
+  --line-soft:   rgba(0,0,0,0.06);
+
+  --accent:      #0071e3;
+  --accent-hi:   #0077ed;
+  --accent-soft: rgba(0,113,227,0.10);
+  --pos:         #1a8a44;
+  --pos-soft:    rgba(48,209,88,0.16);
+
+  --fill:        rgba(0,0,0,0.05);
+  --fill-hi:     rgba(0,0,0,0.08);
+
+  --nav-bg:      rgba(255,255,255,0.72);
+  --sheet-bg:    rgba(255,255,255,0.86);
+  --scrim:       rgba(0,0,0,0.45);
+
+  --shadow-s:    0 1px 2px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.05);
+  --shadow-m:    0 2px 6px rgba(0,0,0,0.05), 0 12px 32px rgba(0,0,0,0.08);
+  --shadow-l:    0 8px 24px rgba(0,0,0,0.10), 0 32px 80px rgba(0,0,0,0.16);
+
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+          "Helvetica Neue", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+  --r-pill: 980px;
+
+  --wrap: 1040px;
+  --wrap-wide: 1280px;
+  --nav-h: 48px;
+
+  --ease: cubic-bezier(0.32, 0.08, 0.24, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Motion system (intro): springs drive transforms via JS; these tokens
+     govern the non-spring transitions. hover 200ms · exit 300ms. */
+  --d-hover: 200ms;
+  --d-exit: 300ms;
+  --e-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --e-exit: cubic-bezier(0.32, 0, 0.67, 0);
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) {
+    --bg:          #1e1f22;
+    --bg-alt:      #2b2d31;
+    --bg-elev:     #313338;
+    --bg-sunken:   #1a1b1e;
+    --text:        #f2f3f5;
+    --text-2:      #b5bac1;
+    --text-3:      #949ba4;
+    --line:        rgba(255,255,255,0.12);
+    --line-soft:   rgba(255,255,255,0.06);
+    --accent:      #5865f2;
+    --accent-hi:   #7984f8;
+    --accent-soft: rgba(88,101,242,0.20);
+    --pos:         #2dc770;
+    --pos-soft:    rgba(35,165,90,0.18);
+    --fill:        rgba(255,255,255,0.06);
+    --fill-hi:     rgba(255,255,255,0.10);
+    --nav-bg:      rgba(30,31,34,0.85);
+    --sheet-bg:    rgba(43,45,49,0.92);
+    --scrim:       rgba(0,0,0,0.70);
+    --shadow-s:    0 1px 2px rgba(0,0,0,0.30);
+    --shadow-m:    0 2px 8px rgba(0,0,0,0.35), 0 16px 40px rgba(0,0,0,0.30);
+    --shadow-l:    0 10px 30px rgba(0,0,0,0.45), 0 40px 90px rgba(0,0,0,0.40);
+  }
+}
+
+html[data-theme="dark"] {
+  /* Discord-grade dark: layered warm greys instead of pure black, grey-blue
+     text, blurple accent. The true-black loader dissolves into this. */
+  --bg:          #1e1f22;
+  --bg-alt:      #2b2d31;
+  --bg-elev:     #313338;
+  --bg-sunken:   #1a1b1e;
+  --text:        #f2f3f5;
+  --text-2:      #b5bac1;
+  --text-3:      #949ba4;
+  --line:        rgba(255,255,255,0.12);
+  --line-soft:   rgba(255,255,255,0.06);
+  --accent:      #5865f2;
+  --accent-hi:   #7984f8;
+  --accent-soft: rgba(88,101,242,0.20);
+  --pos:         #2dc770;
+  --pos-soft:    rgba(35,165,90,0.18);
+  --fill:        rgba(255,255,255,0.06);
+  --fill-hi:     rgba(255,255,255,0.10);
+  --nav-bg:      rgba(30,31,34,0.85);
+  --sheet-bg:    rgba(43,45,49,0.92);
+  --scrim:       rgba(0,0,0,0.70);
+  --shadow-s:    0 1px 2px rgba(0,0,0,0.30);
+  --shadow-m:    0 2px 8px rgba(0,0,0,0.35), 0 16px 40px rgba(0,0,0,0.30);
+  --shadow-l:    0 10px 30px rgba(0,0,0,0.45), 0 40px 90px rgba(0,0,0,0.40);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   2 — BASE
+   ═══════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 17px;
+  line-height: 1.47059;
+  letter-spacing: -0.022em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+body.is-locked { overflow: hidden; }
+
+img, svg { display: block; max-width: 100%; }
+button, input, select { font: inherit; color: inherit; }
+button { background: none; border: 0; cursor: pointer; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+[hidden] { display: none !important; }
+
+/* anchors land below the sticky nav */
+section[id], div[id], span[id] { scroll-margin-top: calc(var(--nav-h) + 8px); }
+
+:focus-visible {
+  outline: 4px solid var(--accent-soft);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+::selection { background: var(--accent-soft); }
+
+.skip {
+  position: fixed; top: 8px; left: 8px; z-index: 200;
+  background: var(--bg-elev); color: var(--text);
+  padding: 10px 16px; border-radius: var(--r-sm);
+  box-shadow: var(--shadow-m);
+  transform: translateY(-200%);
+  transition: transform .2s var(--ease);
+}
+.skip:focus { transform: none; text-decoration: none; }
+
+.wrap { width: 100%; max-width: var(--wrap); margin: 0 auto; padding: 0 22px; }
+.wrap--wide { max-width: var(--wrap-wide); }
+
+.section { padding: 96px 0; }
+/* Bleed the tinted bands in and out instead of butting them against the
+   page — the seam dissolves, so sections read as one continuous field. */
+.section--alt {
+  background: linear-gradient(180deg,
+    transparent 0%, var(--bg-alt) 9%, var(--bg-alt) 91%, transparent 100%);
+}
+.section--tight { padding: 40px 0 88px; }
+
+/* #growth sits under BOTH the nav and the sticky filter bar */
+#growth { scroll-margin-top: 158px; }
+
+.eyebrow {
+  font-size: 13px; font-weight: 600; line-height: 1.3;
+  letter-spacing: 0.01em; text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 12px;
+}
+
+.h2 {
+  font-size: clamp(30px, 4.6vw, 48px);
+  line-height: 1.08349;
+  font-weight: 600;
+  letter-spacing: -0.003em;
+}
+
+.h3 { font-size: 24px; line-height: 1.16; font-weight: 600; letter-spacing: 0.004em; }
+
+.sub {
+  font-size: 19px; line-height: 1.42; color: var(--text-2);
+  letter-spacing: 0.012em; max-width: 46ch; margin-top: 14px;
+}
+
+.sec-head { margin-bottom: 44px; }
+
+.num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+
+/* Buttons ─────────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  font-size: 17px; font-weight: 400; letter-spacing: -0.022em;
+  padding: 11px 22px; border-radius: var(--r-pill);
+  background: var(--accent); color: #fff;
+  transition: background .2s var(--ease), transform .2s var(--ease);
+  white-space: nowrap;
+}
+.btn:hover { background: var(--accent-hi); text-decoration: none; }
+.btn:active { transform: scale(0.97); }
+.btn--ghost {
+  background: transparent; color: var(--accent);
+  border: 1px solid currentColor; padding: 10px 21px;
+}
+.btn--ghost:hover { background: var(--accent-soft); }
+.btn--sm { font-size: 14px; padding: 7px 15px; }
+.btn--fill { background: var(--fill); color: var(--text); }
+.btn--fill:hover { background: var(--fill-hi); }
+
+.link-arrow { font-size: 17px; display: inline-flex; align-items: center; gap: 4px; }
+.link-arrow::after { content: "›"; font-size: 20px; line-height: 1; transition: transform .2s var(--ease); }
+.link-arrow:hover { text-decoration: none; }
+.link-arrow:hover::after { transform: translateX(3px); }
+
+/* ═══════════════════════════════════════════════════════════════
+   3 — NAV
+   ═══════════════════════════════════════════════════════════════ */
+.nav {
+  position: sticky; top: 0; z-index: 90;
+  height: var(--nav-h);
+  background: var(--nav-bg);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--line-soft);
+}
+.nav__in {
+  height: 100%; max-width: var(--wrap-wide); margin: 0 auto;
+  padding: 0 22px; display: flex; align-items: center; gap: 18px;
+}
+.nav__brand {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 15px; font-weight: 600; letter-spacing: -0.01em; color: var(--text);
+}
+.nav__brand:hover { text-decoration: none; opacity: .7; }
+.nav__mark {
+  width: 24px; height: 24px; border-radius: 7px; flex: none;
+  display: grid; place-items: center;
+  font-size: 11px; font-weight: 700; letter-spacing: 0; color: #fff;
+  background: linear-gradient(140deg, var(--accent), #bf5af2);
+}
+.pill-private {
+  font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--text-3); border: 1px solid var(--line);
+  padding: 2px 7px; border-radius: var(--r-pill); white-space: nowrap;
+}
+.nav__links { display: flex; gap: 4px; margin-left: auto; }
+.nav__links a {
+  font-size: 13px; color: var(--text-2); padding: 6px 11px; border-radius: var(--r-sm);
+  transition: color .2s var(--ease), background .2s var(--ease);
+}
+.nav__links a:hover { color: var(--text); background: var(--fill); text-decoration: none; }
+.nav__links a.is-active { color: var(--text); font-weight: 500; }
+.nav__tools { display: flex; align-items: center; gap: 6px; margin-left: 8px; }
+.icon-btn {
+  width: 32px; height: 32px; border-radius: var(--r-pill);
+  display: grid; place-items: center; color: var(--text-2);
+  transition: background .2s var(--ease), color .2s var(--ease);
+}
+.icon-btn:hover { background: var(--fill); color: var(--text); }
+.icon-btn svg { width: 17px; height: 17px; }
+.nav__burger { display: none; }
+
+.nav__sheet {
+  position: fixed; inset: var(--nav-h) 0 auto 0; z-index: 89;
+  background: var(--nav-bg);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--line-soft);
+  padding: 8px 22px 22px;
+  display: none; flex-direction: column;
+}
+.nav__sheet.is-open { display: flex; animation: dropIn .28s var(--ease-out) both; }
+.nav__sheet a {
+  font-size: 22px; font-weight: 500; color: var(--text);
+  padding: 14px 0; border-bottom: 1px solid var(--line-soft);
+}
+.nav__sheet a:hover { text-decoration: none; color: var(--accent); }
+@keyframes dropIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
+
+/* ═══════════════════════════════════════════════════════════════
+   4 — HERO
+   ═══════════════════════════════════════════════════════════════ */
+.hero { position: relative; padding: 108px 0 76px; text-align: center; overflow: hidden; }
+.hero::before {
+  content: ""; position: absolute; inset: -30% -10% auto -10%; height: 130%;
+  background:
+    radial-gradient(ellipse 42% 46% at 22% 12%, var(--accent-soft) 0%, transparent 68%),
+    radial-gradient(ellipse 40% 44% at 82% 4%, rgba(191,90,242,0.12) 0%, transparent 68%);
+  filter: blur(28px); pointer-events: none;
+}
+.hero > * { position: relative; }
+.hero__eyebrow {
+  font-size: 15px; font-weight: 500; color: var(--accent);
+  letter-spacing: -0.01em; margin-bottom: 14px;
+}
+.hero h1 {
+  font-size: clamp(20px, 5.7vw, 72px);
+  line-height: 1.08;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin: 0 auto;
+}
+/* each sentence owns a line; the clamp is sized so the longest line
+   fits a 360px viewport without ever wrapping mid-sentence */
+.hero h1 .line { display: block; white-space: nowrap; }
+.hero__sub {
+  font-size: clamp(17px, 2.2vw, 21px); line-height: 1.4; color: var(--text-2);
+  letter-spacing: 0.011em; max-width: 40ch; margin: 20px auto 0;
+}
+.hero__cta { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 30px; }
+
+.stats {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1px; margin-top: 68px;
+  background: var(--line-soft);
+  border-radius: var(--r-lg); overflow: hidden;
+  border: 1px solid var(--line-soft);
+}
+.stat { background: var(--bg); padding: 26px 18px; text-align: center; }
+.stat__v {
+  font-size: clamp(28px, 4vw, 40px); font-weight: 600; letter-spacing: -0.01em;
+  line-height: 1.1;
+  background: linear-gradient(175deg, var(--text) 20%, var(--text-2) 130%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+.stat__l { font-size: 13px; color: var(--text-3); margin-top: 7px; letter-spacing: -0.01em; }
+
+/* ═══════════════════════════════════════════════════════════════
+   5 — PARTNER MARQUEE
+   ═══════════════════════════════════════════════════════════════ */
+.marquee { padding: 44px 0; border-block: 1px solid var(--line-soft); }
+.marquee__label {
+  text-align: center; font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--text-3); margin-bottom: 26px;
+}
+/* mask the track only — the section's divider lines still run edge to edge */
+.marquee__mask {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 11%, #000 89%, transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 11%, #000 89%, transparent 100%);
+}
+.marquee__track {
+  display: flex; gap: 12px; width: max-content;
+  animation: slide 44s linear infinite;
+}
+.marquee:hover .marquee__track { animation-play-state: paused; }
+@keyframes slide { to { transform: translateX(-50%); } }
+.marquee__item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 18px 9px 9px; border-radius: var(--r-pill);
+  border: 1px solid var(--line-soft); background: var(--bg-elev);
+  font-size: 15px; font-weight: 500; color: var(--text-2); white-space: nowrap;
+  transition: color .25s var(--ease), border-color .25s var(--ease), transform .25s var(--ease);
+}
+.marquee__item:hover { color: var(--text); border-color: var(--line); transform: translateY(-2px); }
+.mono-mark {
+  width: 30px; height: 30px; border-radius: 9px; flex: none;
+  display: grid; place-items: center;
+  font-size: 12px; font-weight: 700; letter-spacing: 0; color: #fff;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   6 — FILTER BAR  (the interactive core)
+   ═══════════════════════════════════════════════════════════════ */
+.filterbar {
+  position: sticky; top: var(--nav-h); z-index: 60;
+  background: var(--nav-bg);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--line-soft);
+  padding: 12px 0;
+}
+.rail {
+  display: flex; gap: 8px; overflow-x: auto; scroll-behavior: smooth;
+  scrollbar-width: none; -ms-overflow-style: none;
+  /* full-bleed scroller whose first chip still lines up with the content column */
+  padding: 2px max(22px, calc((100% - var(--wrap-wide)) / 2 + 22px));
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 20px, #000 calc(100% - 20px), transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 20px, #000 calc(100% - 20px), transparent 100%);
+}
+.rail::-webkit-scrollbar { display: none; }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 8px; flex: none;
+  padding: 7px 15px 7px 8px; border-radius: var(--r-pill);
+  border: 1px solid var(--line-soft); background: var(--bg-elev);
+  font-size: 14px; font-weight: 500; letter-spacing: -0.01em; color: var(--text-2);
+  transition: background .22s var(--ease), color .22s var(--ease),
+              border-color .22s var(--ease), transform .18s var(--ease);
+}
+.chip:hover { color: var(--text); border-color: var(--line); }
+.chip:active { transform: scale(0.96); }
+.chip[aria-pressed="true"] {
+  background: var(--text); color: var(--bg); border-color: var(--text);
+}
+.chip[aria-pressed="true"] .chip__mark { box-shadow: 0 0 0 2px var(--bg); }
+.chip--all { padding-left: 15px; }
+.chip__mark { width: 22px; height: 22px; border-radius: 6px; font-size: 10px; }
+.chip__n {
+  font-size: 11px; opacity: .55; font-variant-numeric: tabular-nums;
+  padding-left: 2px;
+}
+
+.controls {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  padding: 12px 22px 0; max-width: var(--wrap-wide); margin: 0 auto;
+}
+.seg {
+  display: inline-flex; padding: 2px; gap: 2px;
+  background: var(--fill); border-radius: var(--r-sm);
+}
+.seg button {
+  font-size: 13px; font-weight: 500; letter-spacing: -0.01em;
+  padding: 5px 13px; border-radius: 8px; color: var(--text-2);
+  transition: background .2s var(--ease), color .2s var(--ease);
+}
+.seg button:hover { color: var(--text); }
+.seg button[aria-pressed="true"] {
+  background: var(--bg-elev); color: var(--text); box-shadow: var(--shadow-s);
+}
+.count { font-size: 13px; color: var(--text-3); margin-left: auto; letter-spacing: -0.01em; }
+.count strong { color: var(--text-2); font-weight: 500; }
+/* on phones the count moves out of the sticky bar so it doesn't cost a whole row */
+.count--inline { display: none; margin: 16px 0 0; }
+.clear-btn { font-size: 13px; color: var(--accent); }
+.clear-btn:hover { text-decoration: underline; }
+
+/* Selection summary ───────────────────────────────── */
+.summary {
+  display: grid; grid-template-columns: 1.1fr 1fr; gap: 28px; align-items: center;
+  background: var(--bg-elev); border: 1px solid var(--line-soft);
+  border-radius: var(--r-xl); padding: 30px 32px; margin: 0 0 8px;
+  box-shadow: var(--shadow-s);
+}
+.summary[hidden] { display: none; }
+.summary__marks { display: flex; align-items: center; margin-bottom: 14px; }
+.summary__marks .mono-mark { margin-right: -8px; box-shadow: 0 0 0 3px var(--bg-elev); }
+.summary h3 { font-size: 26px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.15; }
+.summary p { font-size: 15px; color: var(--text-2); margin-top: 8px; letter-spacing: -0.01em; }
+.summary__meta { font-size: 12px; color: var(--text-3); margin-top: 12px; letter-spacing: .02em; text-transform: uppercase; }
+.summary__stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: 12px; }
+.summary__role {
+  display: inline-block; font-size: 12px; font-weight: 500;
+  color: var(--accent); background: var(--accent-soft);
+  padding: 4px 11px; border-radius: var(--r-pill); margin-bottom: 12px;
+}
+.mini {
+  background: var(--bg-alt); border-radius: var(--r-md); padding: 14px 16px;
+}
+.mini__v { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+.mini__l { font-size: 11px; color: var(--text-3); margin-top: 3px; }
+
+/* ═══════════════════════════════════════════════════════════════
+   7 — WORK GRID
+   ═══════════════════════════════════════════════════════════════ */
+.grid {
+  display: grid; gap: 22px; margin-top: 34px; align-items: start;
+  grid-template-columns: repeat(auto-fill, minmax(292px, 1fr));
+}
+.card {
+  position: relative; text-align: left; width: 100%;
+  /* flex column, or the <button> vertically centres its content in the grid track */
+  display: flex; flex-direction: column;
+  background: var(--bg-elev); border: 1px solid var(--line-soft);
+  border-radius: var(--r-lg); overflow: hidden;
+  transition: transform .35s var(--ease-out), box-shadow .35s var(--ease-out),
+              opacity .22s var(--ease), border-color .3s var(--ease);
+}
+.card:hover { transform: translateY(-4px); box-shadow: var(--shadow-m); border-color: var(--line); }
+.card:has(.card__hit:active) { transform: translateY(-1px); }
+.card.is-out, .acct.is-out { opacity: 0; transform: translateY(10px) scale(.985); }
+
+/* Full-card hit target opens the detail sheet; the corner link goes straight
+   to the post. Siblings, not nested — a button may not contain a link. */
+.card__hit {
+  position: absolute; inset: 0; z-index: 3;
+  border-radius: inherit; cursor: pointer;
+}
+.card__hit:focus-visible { outline: none; }
+.card:has(.card__hit:focus-visible) { outline: 4px solid var(--accent-soft); outline-offset: 2px; }
+
+.card__ext {
+  position: absolute; top: 12px; right: 12px; z-index: 4;
+  width: 30px; height: 30px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: rgba(0,0,0,0.45); color: #fff;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  opacity: 0; transform: scale(.88);
+  transition: opacity .25s var(--ease), transform .25s var(--ease), background .2s var(--ease);
+}
+.card:hover .card__ext, .card__ext:focus-visible { opacity: 1; transform: none; }
+.card__ext:hover { background: rgba(0,0,0,0.7); text-decoration: none; }
+.card__ext svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; }
+/* touch devices have no hover, so never hide the link behind one */
+@media (hover: none) { .card__ext { opacity: 1; transform: none; } }
+
+.thumb {
+  position: relative; aspect-ratio: 16 / 10; overflow: hidden; flex: none;
+  display: grid; place-items: center;
+}
+.thumb--tall { aspect-ratio: 4 / 5; }
+.thumb img { width: 100%; height: 100%; object-fit: cover; }
+/* Best-effort Instagram frame: absolutely layered over the branded tile,
+   under the dark gradient and badges. If Instagram declines the request
+   the img removes itself and the tile underneath is what ships. */
+.thumb__auto { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+/* brand monogram sits in the corner so it never fights the play button */
+.thumb__glyph {
+  position: absolute; left: 14px; bottom: 4px;
+  font-size: 66px; line-height: 1; font-weight: 700;
+  color: rgba(255,255,255,0.20);
+  letter-spacing: -0.03em; user-select: none;
+}
+.thumb::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.35));
+}
+.thumb__play {
+  position: absolute; z-index: 2; width: 50px; height: 50px; border-radius: 50%;
+  background: rgba(255,255,255,0.22); backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: grid; place-items: center;
+  border: 1px solid rgba(255,255,255,0.35);
+  transition: transform .3s var(--ease-out), background .3s var(--ease);
+}
+.card:hover .thumb__play { transform: scale(1.09); background: rgba(255,255,255,0.32); }
+.thumb__play svg { width: 17px; height: 17px; fill: #fff; margin-left: 3px; }
+.thumb__badges {
+  position: absolute; z-index: 2; left: 12px; top: 12px; display: flex; gap: 6px;
+}
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 500; letter-spacing: 0; color: #fff;
+  background: rgba(0,0,0,0.42); backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 4px 9px; border-radius: var(--r-pill);
+}
+.badge svg { width: 11px; height: 11px; fill: currentColor; }
+.thumb__stat {
+  position: absolute; z-index: 2; right: 12px; bottom: 12px;
+  font-size: 12px; font-weight: 500; color: #fff;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+}
+
+.card__body { padding: 16px 18px 18px; }
+.card__brand {
+  font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
+  color: var(--text-3); margin-bottom: 6px;
+}
+.card__title {
+  font-size: 17px; font-weight: 600; letter-spacing: -0.015em; line-height: 1.3;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.card__metrics {
+  display: flex; gap: 14px; margin-top: 12px; padding-top: 12px;
+  border-top: 1px solid var(--line-soft);
+}
+.card__metric { font-size: 12px; color: var(--text-3); }
+.card__metric b { display: block; font-size: 15px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
+
+.empty {
+  text-align: center; padding: 70px 20px; color: var(--text-3);
+  border: 1px dashed var(--line); border-radius: var(--r-lg); margin-top: 34px;
+}
+.empty[hidden] { display: none; }
+.empty h4 { font-size: 19px; color: var(--text); font-weight: 600; margin-bottom: 6px; }
+
+/* ═══════════════════════════════════════════════════════════════
+   8 — GROWTH / ACCOUNTS
+   ═══════════════════════════════════════════════════════════════ */
+.acct-grid {
+  display: grid; gap: 22px; margin-top: 34px; align-items: start;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+}
+.acct {
+  background: var(--bg-elev); border: 1px solid var(--line-soft);
+  border-radius: var(--r-lg); padding: 22px; overflow: hidden;
+  transition: transform .35s var(--ease-out), box-shadow .35s var(--ease-out), opacity .22s var(--ease);
+}
+.acct:hover { transform: translateY(-3px); box-shadow: var(--shadow-m); }
+.acct[hidden] { display: none; }
+.acct__top { display: flex; align-items: center; gap: 11px; }
+.acct__handle { font-size: 16px; font-weight: 600; letter-spacing: -0.015em; }
+.acct__plat { font-size: 12px; color: var(--text-3); margin-top: 1px; }
+.acct__delta {
+  margin-left: auto; font-size: 12px; font-weight: 600;
+  color: var(--pos); background: var(--pos-soft);
+  padding: 4px 9px; border-radius: var(--r-pill); white-space: nowrap;
+}
+
+.acct__figure { display: flex; align-items: baseline; gap: 9px; margin: 18px 0 4px; }
+.acct__now { font-size: 34px; font-weight: 600; letter-spacing: -0.02em; line-height: 1; }
+.acct__from { font-size: 13px; color: var(--text-3); }
+/* Shown when an account has a start/end but no month-by-month series.
+   Deliberately a fade, not a filled progress bar — it reads as "ramped up"
+   without implying a measured trajectory or a percentage. */
+.acct__ramp {
+  height: 6px; border-radius: 3px; margin-top: 16px; overflow: hidden;
+}
+.acct__ramp span { display: block; height: 100%; width: 100%; border-radius: 3px; }
+.acct__link { font-size: 13px; font-weight: 500; }
+.spark { width: 100%; height: 62px; margin-top: 10px; overflow: visible; }
+.spark path.line { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.spark path.area { stroke: none; }
+.acct__foot {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line-soft);
+  font-size: 12px; color: var(--text-3);
+}
+.tag {
+  font-size: 11px; font-weight: 500; color: var(--text-2);
+  background: var(--fill); padding: 3px 9px; border-radius: var(--r-pill);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   9 — SERVICES / ABOUT / CONTACT / FOOTER
+   ═══════════════════════════════════════════════════════════════ */
+.svc-grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); margin-top: 40px; }
+.svc {
+  background: var(--bg-elev); border: 1px solid var(--line-soft);
+  border-radius: var(--r-lg); padding: 26px;
+  transition: transform .35s var(--ease-out), box-shadow .35s var(--ease-out);
+}
+.svc:hover { transform: translateY(-3px); box-shadow: var(--shadow-m); }
+.svc__i {
+  width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center;
+  background: var(--accent-soft); color: var(--accent); margin-bottom: 16px;
+}
+.svc__i svg { width: 20px; height: 20px; }
+.svc h4 { font-size: 18px; font-weight: 600; letter-spacing: -0.015em; }
+.svc p { font-size: 15px; color: var(--text-2); margin-top: 7px; letter-spacing: -0.01em; }
+.svc ul { list-style: none; margin-top: 14px; display: grid; gap: 6px; }
+.svc li { font-size: 13px; color: var(--text-3); padding-left: 16px; position: relative; }
+.svc li::before { content: "›"; position: absolute; left: 3px; color: var(--accent); }
+
+.about { display: grid; grid-template-columns: 340px 1fr; gap: 56px; align-items: start; }
+.portrait {
+  aspect-ratio: 4 / 5; border-radius: var(--r-xl); overflow: hidden;
+  display: grid; place-items: center; position: relative;
+  background: linear-gradient(150deg, var(--accent), #bf5af2);
+  box-shadow: var(--shadow-m);
+}
+.portrait img { width: 100%; height: 100%; object-fit: cover; }
+.portrait span { font-size: 72px; font-weight: 700; color: rgba(255,255,255,0.9); letter-spacing: -0.03em; }
+.about__body p { font-size: 19px; line-height: 1.45; color: var(--text-2); letter-spacing: 0.012em; }
+.about__body p + p { margin-top: 18px; }
+.facts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; margin-top: 34px;
+  background: var(--line-soft); border: 1px solid var(--line-soft); border-radius: var(--r-md); overflow: hidden; }
+.fact { background: var(--bg); padding: 16px 18px; }
+.fact dt { font-size: 12px; color: var(--text-3); }
+.fact dd { font-size: 16px; font-weight: 500; margin-top: 3px; letter-spacing: -0.01em; }
+
+.contact { text-align: center; }
+.contact h2 { font-size: clamp(32px, 5.4vw, 56px); font-weight: 600; letter-spacing: -0.015em; line-height: 1.07; }
+.contact p { font-size: 19px; color: var(--text-2); margin: 16px auto 0; max-width: 44ch; letter-spacing: 0.012em; }
+.socials { display: flex; gap: 10px; justify-content: center; margin-top: 30px; flex-wrap: wrap; }
+.social {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 17px; border-radius: var(--r-pill);
+  border: 1px solid var(--line); color: var(--text-2); font-size: 14px;
+  transition: color .2s var(--ease), border-color .2s var(--ease), transform .2s var(--ease);
+}
+.social:hover { color: var(--text); border-color: var(--text-3); transform: translateY(-2px); text-decoration: none; }
+.social svg { width: 15px; height: 15px; fill: currentColor; }
+
+.foot { background: var(--bg-alt); padding: 40px 0; border-top: 1px solid var(--line-soft); }
+.foot__in { display: flex; flex-wrap: wrap; gap: 14px 26px; align-items: center; font-size: 12px; color: var(--text-3); }
+.foot a { color: var(--text-3); }
+.foot a:hover { color: var(--text-2); }
+.foot__note { margin-left: auto; }
+
+/* ═══════════════════════════════════════════════════════════════
+   10 — DETAIL SHEET (modal)
+   ═══════════════════════════════════════════════════════════════ */
+.scrim {
+  position: fixed; inset: 0; z-index: 100; background: var(--scrim);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  display: grid; place-items: center; padding: 24px;
+  opacity: 0; pointer-events: none; transition: opacity .3s var(--ease);
+}
+.scrim.is-open { opacity: 1; pointer-events: auto; }
+.sheet {
+  width: min(880px, 100%); max-height: min(88vh, 900px); overflow-y: auto;
+  background: var(--bg-elev); border-radius: var(--r-xl);
+  box-shadow: var(--shadow-l); position: relative;
+  transform: translateY(18px) scale(.985); opacity: 0;
+  transition: transform .38s var(--ease-out), opacity .28s var(--ease);
+}
+.scrim.is-open .sheet { transform: none; opacity: 1; }
+.sheet__close {
+  position: absolute; top: 14px; right: 14px; z-index: 3;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(0,0,0,0.42); color: #fff; display: grid; place-items: center;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  transition: background .2s var(--ease);
+}
+.sheet__close:hover { background: rgba(0,0,0,0.62); }
+.sheet__close svg { width: 13px; height: 13px; stroke: currentColor; stroke-width: 2.4; fill: none; }
+.sheet__hero { position: relative; aspect-ratio: 16/9; display: grid; place-items: center; }
+.sheet__hero .thumb__glyph { font-size: 100px; }
+.sheet__body { padding: 28px 32px 32px; }
+.sheet__eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text-3); }
+.sheet__title { font-size: 30px; font-weight: 600; letter-spacing: -0.015em; line-height: 1.14; margin-top: 8px; }
+.sheet__desc { font-size: 17px; color: var(--text-2); margin-top: 12px; letter-spacing: -0.01em; max-width: 62ch; }
+.sheet__metrics {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 1px;
+  margin-top: 24px; background: var(--line-soft);
+  border: 1px solid var(--line-soft); border-radius: var(--r-md); overflow: hidden;
+}
+.sheet__metrics .mini { background: var(--bg-elev); border-radius: 0; }
+.sheet__cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 28px; }
+.sheet__cols h5 { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text-3); margin-bottom: 10px; }
+.sheet__cols ul { list-style: none; display: grid; gap: 8px; }
+.sheet__cols li { font-size: 15px; color: var(--text-2); padding-left: 18px; position: relative; letter-spacing: -0.01em; }
+.sheet__cols li::before { content: ""; position: absolute; left: 4px; top: 9px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+.sheet__foot {
+  display: flex; align-items: center; gap: 10px; margin-top: 28px;
+  padding-top: 20px; border-top: 1px solid var(--line-soft);
+}
+.sheet__nav { margin-left: auto; display: flex; gap: 6px; }
+
+/* ═══════════════════════════════════════════════════════════════
+   10b — INTRO LOADER
+   Black field, warm crimson/amber light, heavy grain, a typed line
+   under a blinking caret. Sits over an already-rendered page so the
+   reveal lands on finished content rather than a flash of nothing.
+   ═══════════════════════════════════════════════════════════════ */
+.intro {
+  position: fixed; inset: 0; z-index: 400;
+  background: #000; color: #fff;
+  display: grid; place-items: center;
+  overflow: hidden;
+  /* exit is spring-driven from JS (300ms class) — no CSS transition here,
+     and transform/opacity only: no blur, nothing that forces repaints */
+}
+.intro.is-done { opacity: 0; pointer-events: none; }
+html.intro-up { overflow: hidden; }
+
+/* Barely-there warm light over true black — the field should read as
+   black first, with the crimson/amber only breathing at the edges. */
+.intro__glow {
+  position: absolute; inset: -25%;
+  background:
+    radial-gradient(ellipse 30% 36% at 20% 24%, rgba(255,45,85,0.15) 0%, transparent 64%),
+    radial-gradient(ellipse 26% 32% at 78% 68%, rgba(255,159,10,0.11) 0%, transparent 62%),
+    radial-gradient(ellipse 40% 24% at 52% 100%, rgba(255,214,10,0.05) 0%, transparent 70%);
+  filter: blur(54px);
+  animation: introDrift 14s ease-in-out infinite alternate;
+}
+@keyframes introDrift {
+  0%   { transform: translate3d(0,0,0) scale(1); }
+  50%  { transform: translate3d(-3%, 2.5%, 0) scale(1.09); }
+  100% { transform: translate3d(2.5%, -2%, 0) scale(1.03); }
+}
+/* film grain so the black never reads as flat #000 */
+.intro__grain {
+  position: absolute; inset: 0; opacity: .5; mix-blend-mode: overlay;
+  background-image: radial-gradient(rgba(255,255,255,0.22) 1px, transparent 1px);
+  background-size: 3px 3px;
+  animation: grainShift .6s steps(3) infinite;
+}
+@keyframes grainShift {
+  0%   { transform: translate(0,0); }
+  33%  { transform: translate(-1px,1px); }
+  66%  { transform: translate(1px,-1px); }
+  100% { transform: translate(0,0); }
+}
+.intro__vignette {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 50% 50%, transparent 40%, rgba(0,0,0,0.72) 100%);
+}
+
+.intro__center { position: relative; z-index: 2; text-align: center; padding: 0 24px; width: 100%; }
+/* the handful of elements the springs move — layer hints, transform-only */
+.intro__glow, .intro__grain { will-change: transform; }
+.intro__eyebrow, .intro__line, .intro__cta { will-change: transform, opacity; }
+.intro__eyebrow {
+  font-size: 11px; font-weight: 600; letter-spacing: .28em; text-transform: uppercase;
+  color: rgba(255,255,255,0.5); margin-bottom: 26px;
+}
+.intro__line {
+  display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+  font-size: clamp(28px, 6.4vw, 76px);
+  font-weight: 700; letter-spacing: -0.035em; line-height: 1.04;
+  min-height: 1.1em;
+}
+.intro__caret {
+  display: inline-block; width: .07em; height: .92em; flex: none;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #ffd60a, #ff2d55);
+  box-shadow: 0 0 22px rgba(255,159,10,0.85);
+  animation: caretBlink 1.05s steps(1) infinite;
+}
+@keyframes caretBlink { 0%,55% { opacity: 1; } 56%,100% { opacity: 0; } }
+
+/* The way down: appears once the phrase has finished typing.
+   Arrival and hover scale are spring-driven from JS; CSS keeps only the
+   hidden initial state and the 200ms colour changes. */
+.intro__cta {
+  margin-top: 42px; display: flex; justify-content: center;
+  opacity: 0; transform: translateY(18px); pointer-events: none;
+}
+.intro.is-ready .intro__cta { pointer-events: auto; }
+.intro__enter {
+  display: inline-flex; align-items: center; gap: 11px;
+  font-size: 15px; font-weight: 500; letter-spacing: .01em; color: #fff;
+  padding: 14px 28px; border-radius: var(--r-pill);
+  border: 1px solid rgba(255,255,255,0.26);
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  transition: background var(--d-hover) var(--e-standard),
+              border-color var(--d-hover) var(--e-standard);
+}
+.intro__enter:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.55); }
+.intro__enter svg { width: 14px; height: 14px; animation: dip 1.9s ease-in-out infinite; }
+@keyframes dip { 0%,100% { transform: translateY(0); } 50% { transform: translateY(3px); } }
+
+.intro__bar {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 2px; z-index: 3;
+  background: rgba(255,255,255,0.10);
+  transition: opacity var(--d-exit) var(--e-exit);
+}
+.intro.is-ready .intro__bar,
+.intro.is-ready .intro__skip,
+.intro.is-ready .intro__hint { opacity: 0; pointer-events: none; }
+.intro__bar span {
+  display: block; height: 100%; width: 0;
+  background: linear-gradient(90deg, #ff2d55, #ff9f0a, #ffd60a);
+  box-shadow: 0 0 14px rgba(255,159,10,0.7);
+}
+.intro__skip {
+  position: absolute; right: 22px; bottom: 22px; z-index: 3;
+  font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+  border: 1px solid rgba(255,255,255,0.22);
+  padding: 9px 16px; border-radius: var(--r-pill);
+  transition: color var(--d-hover) var(--e-standard),
+              border-color var(--d-hover) var(--e-standard),
+              background var(--d-hover) var(--e-standard),
+              opacity var(--d-exit) var(--e-exit);
+}
+.intro__skip:hover { color: #fff; border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.07); }
+.intro__hint {
+  position: absolute; left: 22px; bottom: 26px; z-index: 3;
+  font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  transition: opacity var(--d-exit) var(--e-exit);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   10c — PARTNER ROW (scroll-driven, each logo appears once)
+   ═══════════════════════════════════════════════════════════════ */
+.partners { padding: 72px 0; overflow: hidden; position: relative; }
+.partners__label {
+  text-align: center; font-size: 11px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--text-3); margin-bottom: 34px;
+}
+/* Live marquee viewport: the track glides via transform; grab it (mouse or
+   touch) to take over, hover to pause. Masked edges, no native scrollbar. */
+.partners__viewport {
+  overflow: hidden;
+  cursor: grab;
+  touch-action: pan-y;   /* horizontal gestures are ours; vertical scrolls the page */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%);
+}
+.partners__viewport.is-dragging,
+.rail.is-dragging { cursor: grabbing; scroll-behavior: auto; }
+.rail.is-dragging * { pointer-events: none; }
+.partners__track {
+  display: flex; align-items: center; gap: var(--wm-gap);
+  width: max-content; will-change: transform;
+}
+.partners__set { display: flex; align-items: center; gap: var(--wm-gap); }
+.partners { --wm-gap: clamp(46px, 7vw, 116px); }
+/* Sized so five names always exceed the viewport — that overflow is what
+   the scroll maps onto, and it's what lets each name appear exactly once. */
+.wordmark {
+  display: inline-flex; align-items: center; gap: 14px;
+  font-size: clamp(30px, 4.8vw, 64px);
+  font-weight: 700; letter-spacing: -0.035em; white-space: nowrap;
+  color: var(--text-2);
+  transition: color .35s var(--ease), opacity .35s var(--ease);
+  opacity: .8;
+}
+.wordmark:hover { color: var(--text); opacity: 1; text-decoration: none; }
+.wordmark__dot {
+  width: 9px; height: 9px; border-radius: 50%; flex: none;
+  transition: transform .35s var(--ease-out);
+}
+.wordmark:hover .wordmark__dot { transform: scale(1.6); }
+/* gradient-filled suffix, e.g. the ".AI" in EasySlice.AI */
+.wordmark__suffix {
+  margin-left: -.06em;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+.wordmark:hover .wordmark__suffix { filter: saturate(1.15); }
+
+.wordmark__badge {
+  font-size: .3em; font-weight: 700; letter-spacing: .04em;
+  color: #fff; border-radius: 4px;
+  padding: .24em .4em; align-self: center; margin-left: .1em;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   11 — ACCESS GATE (soft, opt-in)
+   ═══════════════════════════════════════════════════════════════ */
+html.gated body > *:not(.gate) { display: none !important; }
+.gate {
+  position: fixed; inset: 0; z-index: 300; display: none;
+  place-items: center; background: var(--bg); padding: 24px;
+}
+html.gated .gate { display: grid !important; }
+.gate__card { width: min(360px, 100%); text-align: center; }
+.gate__card h1 { font-size: 26px; font-weight: 600; letter-spacing: -0.015em; }
+.gate__card p { font-size: 15px; color: var(--text-2); margin-top: 8px; }
+.gate input {
+  width: 100%; margin-top: 22px; padding: 13px 16px; text-align: center;
+  font-size: 17px; letter-spacing: .3em;
+  background: var(--bg-alt); border: 1px solid var(--line);
+  border-radius: var(--r-md); outline: none;
+  transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
+}
+.gate input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+.gate .btn { width: 100%; margin-top: 12px; }
+.gate__err { font-size: 13px; color: #ff453a; margin-top: 12px; min-height: 18px; }
+.gate__lock { width: 44px; height: 44px; margin: 0 auto 18px; color: var(--text-3); }
+
+/* ═══════════════════════════════════════════════════════════════
+   12 — REVEAL + MOTION
+   ═══════════════════════════════════════════════════════════════ */
+.reveal { opacity: 0; transform: translateY(30px) scale(.985); filter: blur(6px); }
+.reveal.is-in {
+  opacity: 1; transform: none; filter: none;
+  transition: opacity .9s var(--ease-out), transform 1s var(--ease-out), filter .9s var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important; animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+  .marquee__track { animation: none; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   13 — RESPONSIVE
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .summary { grid-template-columns: 1fr; gap: 22px; }
+  .about { grid-template-columns: 1fr; gap: 32px; }
+  .portrait { max-width: 280px; }
+  .sheet__cols { grid-template-columns: 1fr; gap: 22px; }
+}
+
+@media (max-width: 734px) {
+  .section { padding: 68px 0; }
+  .hero { padding: 72px 0 56px; }
+  .nav__links { display: none; }
+  .nav__burger { display: grid; }
+  .nav__tools { margin-left: auto; }
+  .stats { grid-template-columns: repeat(2, 1fr); margin-top: 48px; }
+  .grid, .acct-grid { grid-template-columns: 1fr; gap: 18px; }
+  .summary { padding: 24px; }
+  .summary__stats { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .mini { padding: 12px; }
+  .mini__v { font-size: 18px; }
+  .facts { grid-template-columns: 1fr; }
+  .sheet__body { padding: 22px 20px 26px; }
+  .sheet__title { font-size: 24px; }
+  .foot__note { margin-left: 0; width: 100%; }
+  .controls { gap: 10px; }
+  .count { display: none; }
+  .count--inline { display: block; }
+}
+</style>
+</head>
+
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- ══ INTRO LOADER ══ -->
+<div class="intro" id="intro" role="status" aria-live="polite" aria-label="Loading">
+  <div class="intro__glow"></div>
+  <div class="intro__grain"></div>
+  <div class="intro__vignette"></div>
+  <div class="intro__center">
+    <p class="intro__eyebrow" id="introEyebrow"></p>
+    <div class="intro__line"><span id="introType"></span><span class="intro__caret"></span></div>
+    <div class="intro__cta">
+      <button class="intro__enter" id="introEnter">
+        <span id="introEnterLabel">Down to my portfolio</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 4v15M5.5 13.5 12 20l6.5-6.5"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <span class="intro__hint">Click anywhere to skip</span>
+  <button class="intro__skip" id="introSkip">Skip</button>
+  <div class="intro__bar"><span id="introBar"></span></div>
+</div>
+
+<!-- ══ ACCESS GATE (hidden unless ACCESS.enabled is true) ══ -->
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+  <div class="gate__card">
+    <svg class="gate__lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+      <rect x="4" y="10.5" width="16" height="11" rx="3"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/>
+    </svg>
+    <h1 id="gateTitle">Private</h1>
+    <p id="gateHint">Enter the passcode to continue.</p>
+    <form id="gateForm">
+      <input id="gateInput" type="password" inputmode="numeric" autocomplete="off"
+             aria-label="Passcode" placeholder="••••">
+      <button class="btn" type="submit">Continue</button>
+    </form>
+    <div class="gate__err" id="gateErr" role="alert"></div>
+  </div>
+</div>
+
+<!-- ══ NAV ══ -->
+<header class="nav">
+  <div class="nav__in">
+    <a class="nav__brand" href="#top">
+      <span class="nav__mark" id="navMark">YN</span>
+      <span id="navName">Your Name</span>
+      <span class="pill-private" id="navPrivate">Portfolio</span>
+    </a>
+    <nav class="nav__links" id="navLinks" aria-label="Sections">
+      <a href="#work">Work</a>
+      <a href="#growth">Growth</a>
+      <a href="#services">Services</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav__tools">
+      <button class="icon-btn" id="themeBtn" aria-label="Switch appearance" title="Switch appearance">
+        <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+          <circle cx="12" cy="12" r="4.2"/>
+          <path d="M12 2.2v2.4M12 19.4v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.2 12h2.4M19.4 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"/>
+        </svg>
+      </button>
+      <button class="icon-btn nav__burger" id="burger" aria-label="Menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+          <path d="M4 8h16M4 16h16"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>
+<div class="nav__sheet" id="navSheet">
+  <a href="#work">Work</a>
+  <a href="#growth">Growth</a>
+  <a href="#services">Services</a>
+  <a href="#about">About</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<main id="main">
+  <span id="top"></span>
+
+  <!-- ══ HERO ══ -->
+  <section class="hero">
+    <div class="wrap">
+      <p class="hero__eyebrow" id="heroEyebrow"></p>
+      <h1 id="heroTitle"></h1>
+      <p class="hero__sub" id="heroSub"></p>
+      <div class="hero__cta">
+        <a class="btn" href="#work">See the work</a>
+        <a class="btn btn--ghost" id="heroSecondary" href="#contact">Media kit</a>
+      </div>
+      <div class="stats reveal" id="statStrip"></div>
+    </div>
+  </section>
+
+  <!-- ══ PARTNERS ══ -->
+  <section class="partners" id="partners" aria-label="Companies I've worked for">
+    <p class="partners__label">Companies I've worked for</p>
+    <div class="partners__viewport">
+      <div class="partners__track" id="partnerTrack"></div>
+    </div>
+  </section>
+
+  <!-- ══ PORTFOLIO (filter drives Work + Growth) ══ -->
+  <div id="work">
+    <div class="filterbar">
+      <div class="filterbar__rail">
+        <div class="rail" id="brandRail" role="group" aria-label="Filter by brand"></div>
+      </div>
+      <div class="controls">
+        <div class="seg" id="formatSeg" role="group" aria-label="Filter by format"></div>
+        <button class="clear-btn" id="clearBtn" hidden>Clear selection</button>
+        <p class="count" id="count" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <section class="section section--tight">
+      <div class="wrap wrap--wide">
+        <div class="summary reveal" id="summary" hidden></div>
+
+        <div class="sec-head reveal" style="margin-top:40px; margin-bottom:0">
+          <p class="eyebrow">Work</p>
+          <h2 class="h2">Selected work</h2>
+          <p class="sub">Top performers, not the full catalogue. Pick a partner to see theirs. Every card opens on Instagram.</p>
+          <p class="count count--inline" id="countInline" aria-hidden="true"></p>
+        </div>
+
+        <div class="grid" id="workGrid"></div>
+        <div class="empty" id="workEmpty" hidden>
+          <h4 id="emptyTitle">Nothing here yet</h4>
+          <p id="emptyBody">No work matches this combination of filters.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ GROWTH ══ -->
+    <section class="section section--alt" id="growth">
+      <div class="wrap wrap--wide">
+        <div class="sec-head reveal">
+          <p class="eyebrow">Growth</p>
+          <h2 class="h2">Accounts I've grown</h2>
+          <p class="sub">Partner accounts I directed end to end. Filtered by the same selection as the work above.</p>
+        </div>
+        <div class="acct-grid" id="acctGrid"></div>
+        <div class="empty" id="acctEmpty" hidden>
+          <h4>No accounts for this selection</h4>
+          <p>Try selecting a different partner, or clear the filter.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ══ SERVICES ══ -->
+  <section class="section" id="services">
+    <div class="wrap wrap--wide">
+      <div class="sec-head reveal">
+        <p class="eyebrow">Services</p>
+        <h2 class="h2">How I work with brands</h2>
+      </div>
+      <div class="svc-grid" id="svcGrid"></div>
+    </div>
+  </section>
+
+  <!-- ══ ABOUT ══ -->
+  <section class="section section--alt" id="about">
+    <div class="wrap">
+      <div class="about reveal">
+        <div class="portrait" id="portrait"><span id="portraitInitials">YN</span></div>
+        <div class="about__body">
+          <p class="eyebrow">About</p>
+          <h2 class="h2" id="aboutTitle" style="margin-bottom:20px"></h2>
+          <div id="aboutBody"></div>
+          <dl class="facts" id="facts"></dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CONTACT ══ -->
+  <section class="section contact" id="contact">
+    <div class="wrap">
+      <div class="reveal">
+        <h2 id="contactTitle"></h2>
+        <p id="contactSub"></p>
+        <div class="hero__cta" style="margin-top:28px">
+          <a class="btn" id="contactMail" href="#">Start a conversation</a>
+        </div>
+        <div class="socials" id="socials"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap wrap--wide foot__in">
+    <span id="footCopy"></span>
+    <a href="#top">Back to top</a>
+    <span class="foot__note">Unlisted and not indexed.</span>
+  </div>
+</footer>
+
+<!-- ══ DETAIL SHEET ══ -->
+<div class="scrim" id="scrim">
+  <article class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <button class="sheet__close" id="sheetClose" aria-label="Close">
+      <svg viewBox="0 0 24 24" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+    <div class="sheet__hero" id="sheetHero"></div>
+    <div class="sheet__body">
+      <p class="sheet__eyebrow" id="sheetEyebrow"></p>
+      <h3 class="sheet__title" id="sheetTitle"></h3>
+      <p class="sheet__desc" id="sheetDesc"></p>
+      <div class="sheet__metrics" id="sheetMetrics"></div>
+      <div class="sheet__cols">
+        <div id="sheetDid"><h5>What I did</h5><ul id="sheetRole"></ul></div>
+        <div id="sheetOut"><h5>Outcome</h5><ul id="sheetResult"></ul></div>
+      </div>
+      <div class="sheet__foot">
+        <a class="btn btn--sm" id="sheetLink" href="#" target="_blank" rel="noreferrer noopener">Watch</a>
+        <div class="sheet__nav">
+          <button class="btn btn--sm btn--fill" id="sheetPrev" aria-label="Previous project">‹ Prev</button>
+          <button class="btn btn--sm btn--fill" id="sheetNext" aria-label="Next project">Next ›</button>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>
+
+<script>
+/* ╔═══════════════════════════════════════════════════════════════╗
+   ║  EDIT EVERYTHING BELOW — this block is the whole site.        ║
+   ║                                                               ║
+   ║  1. SITE     → your name, headline, stats, about, contact     ║
+   ║  2. BRANDS   → every brand you've worked with (drives chips)  ║
+   ║  3. WORK     → videos / campaigns, each tagged to a brand     ║
+   ║  4. ACCOUNTS → channels you've grown, with follower series    ║
+   ║                                                               ║
+   ║  Nothing below the DATA block needs to change.                ║
+   ╚═══════════════════════════════════════════════════════════════╝ */
+
+/* ── Optional soft passcode ─────────────────────────────────────
+   Heads up: this only hides the page in the browser. Anyone who
+   opens View Source can read the passcode and the content. It's a
+   "don't show my work to whoever's looking over my shoulder" gate,
+   not security. For real privacy, put the site behind host-level
+   auth (Vercel/Netlify password protection, Cloudflare Access, or
+   HTTP basic auth) and leave this off.                            */
+const ACCESS = {
+  enabled: false,          // ← flip to true to turn the gate on
+  passcode: '2468',
+  hint: 'Enter the passcode to continue.'
+};
+
+const SITE = {
+  name: 'Aryan Sayini',
+  initials: 'AS',
+  role: 'Creative Director · UGC',
+  location: '',                            // ← optional, e.g. 'New York, NY'
+  email: 'aryansayini.business@gmail.com',
+  pageTitle: "Aryan Sayini's Portfolio",
+
+  /* Intro loader. `phrases` are typed then deleted in a loop for
+     `introMs`; the last one is left standing before the page reveals. */
+  intro: {
+    ms: 10000,
+    eyebrow: 'EasySlice · Argil · Manus · Knowlify · Hustl',
+    phrases: ['bringing your growth...'],
+    cta: 'Down to my portfolio'
+  },
+
+  /* Best-effort real thumbnails: each card tries Instagram's public media
+     endpoint for its own reel. When Instagram serves it, the frame layers
+     over the branded tile; when it declines (logged-out visitors in some
+     regions, rate limits), the tile stays and nothing looks broken. An
+     explicit thumb: 'assets/x.jpg' on a WORK item always wins — committed
+     screenshots are the only version Instagram can't take away.        */
+  autoInstagramThumbs: true,
+
+  heroEyebrow: 'Growth · GTM · Startups',
+  /* each entry is one full line — sentences never wrap mid-thought */
+  heroTitleLines: ['Building an audience is easy.', "Reaching your buyer isn't."],
+  heroSub: 'I handle Growth and GTM for startups. I build content into an acquisition channel, not an audience.',
+  secondaryCta: { label: 'Get in touch', href: '#contact' },
+
+  /* Every number here is one you gave me. `value` animates on scroll;
+     `display` overrides the formatted text. Add more as you get them. */
+  stats: [
+    { value: 20000000, display: '20M+', label: 'Total views' },
+    { value: 2,        label: 'YC-backed partners' },
+    { value: 3000000,  display: '3M',  label: 'Views in a week' },
+    { value: 50000,    display: '50K', label: 'Followers in 2 months' }
+  ],
+
+  about: {
+    title: 'I rebuild how startups make content, then prove it in the numbers.',
+    paragraphs: [
+      'Started making content with my first startup, Hustl, and it blew up.',
+      'Went hands-on making UGC for Argil and restructured the UGC program. Now I direct programs and coach in-house teams at AI companies like EasySlice, Argil, and Manus.'
+    ],
+    facts: [],
+    portraitSrc: 'assets/aryan.jpg'
+  },
+
+  contact: {
+    title: "Let's rebuild your growth pipeline.",
+    sub: 'Open to creative direction, program restructures, and coaching for in-house teams.',
+    /* TODO: add your own handles. Empty array = the row is hidden, so
+       there are no dead links on the page until you fill it in. */
+    socials: [
+      // { label: '@yourhandle', href: 'https://instagram.com/yourhandle', icon: 'instagram' },
+    ]
+  },
+
+  services: [
+    { icon: 'compass', title: 'UGC program restructures',
+      body: 'Come in, audit what is being made and why, and rebuild the program around formats that actually earn attention.',
+      bullets: ['Program audit', 'Format architecture', 'Creator briefs & pipeline'] },
+    { icon: 'video', title: 'Creative direction',
+      body: 'Direction on every asset: hook, structure, and edit, so a batch reads as one deliberate body of work.',
+      bullets: ['Concept & hooks', 'Shot direction', 'Edit supervision'] },
+    { icon: 'handshake', title: 'Coaching in-house teams',
+      body: 'For teams who want to own it themselves. I build the format with you and coach the people who will keep running it.',
+      bullets: ['Format design', 'Team coaching', 'Playbooks that outlast me'] },
+    { icon: 'chart', title: 'Hands-on UGC',
+      body: 'Where it started, and still the fastest way to prove a format works before a team scales it.',
+      bullets: ['Concept to final cut', 'Creator-led delivery', 'Rapid format testing'] }
+  ]
+};
+
+/* ── BRANDS ───────────────────────────────────────────────────────
+   id          unique key, referenced by WORK + ACCOUNTS
+   mark        1–2 letters for the monogram tile
+   color       tile + thumbnail gradient
+   role        shown as a pill in the selection summary
+   highlights  headline results — ONLY put real numbers here
+   did/result  fall back onto every video of this brand in the detail
+               sheet, so each one says something true without needing
+               per-video copy. Override per video in WORK when you
+               have something specific to say.
+   ---------------------------------------------------------------- */
+const BRANDS = [
+  { id: 'easyslice', name: 'EasySlice', mark: 'ES', category: 'EasySlice.AI', year: '', color: '#A855F7',
+    wordmark: 'EasySlice', wordmarkSuffix: '.AI',
+    suffixGrad: 'linear-gradient(92deg,#5B8DEF 0%,#A855F7 100%)',
+    dotGrad: 'linear-gradient(135deg,#A855F7 0%,#EC4899 100%)',
+    role: 'Creative Director',
+    summary: 'Rebuilt the UGC program from scratch and took the account from a standing start to 50K followers in two months.',
+    highlights: [{ v: '0 → 50K', l: 'Followers in 2 months' }],
+    did: ['Restructured the UGC program', 'Creative direction across every asset'],
+    result: ['0 → 50K followers in 2 months'] },
+
+  { id: 'argil', name: 'Argil', mark: 'AR', category: 'UGC program', year: '', color: '#0A84FF',
+    wordmark: 'Argil', badge: { label: 'YC', bg: '#ff6600', title: 'Backed by Y Combinator' },
+    role: 'Creative Director',
+    summary: 'Directed the UGC that produced a three-million-view week.',
+    highlights: [{ v: '3M', l: 'Views in a week' }],
+    did: ['Creative direction', 'UGC program'],
+    result: ['3M views in a week'] },
+
+  { id: 'manus', name: 'Manus', mark: 'MA', category: 'Coaching & format design', year: '', color: '#30D158',
+    wordmark: 'Manus', badge: { label: 'META', bg: '#0866ff', title: 'Acquired by Meta' },
+    role: 'Coaching · Format design',
+    summary: 'Coached the team and helped build the format this post runs on. Manus has since been acquired by Meta.',
+    highlights: [{ v: 'Meta', l: 'Acquired by' }],
+    did: ['Coaching', 'Helped build the format'],
+    result: [] },
+
+  { id: 'knowlify', name: 'Knowlify', mark: 'KN', category: 'Partner', year: '', color: '#FFD60A',
+    wordmark: 'Knowlify', badge: { label: 'YC', bg: '#ff6600', title: 'Backed by Y Combinator' },
+    role: 'Creative Director',
+    summary: 'Selected work with Knowlify is going up shortly.',
+    highlights: [],
+    did: [],
+    result: [] },
+
+  { id: 'hustl', name: 'Hustl', mark: 'HU', category: 'First UGC project', year: '', color: '#FF453A',
+    wordmark: 'Hustl',
+    role: 'UGC creator',
+    summary: 'The first startup I made UGC for, where the whole thing started.',
+    highlights: [],
+    did: ['UGC creation, my first project'],
+    result: [] }
+];
+
+/* ── WORK ─────────────────────────────────────────────────────────
+   Every link below is one you sent me. What is still TODO:
+
+   • title  — currently generic ("Reel 01"). Replace with the hook or
+              concept; this is the biggest single upgrade to the page.
+   • views / likes / comments / shares — omit them entirely rather
+              than guessing. A card with no numbers renders clean; a
+              card with numbers shows a metric strip. I left them out
+              because I don't have them.
+   • thumb  — optional override. With autoInstagramThumbs on, every card
+              already tries the reel's own Instagram thumbnail and falls
+              back to the brand-gradient tile. Committing a screenshot
+              (thumb: 'assets/soren-01.jpg') beats both — it always loads.
+   • desc   — one line of context shown in the detail sheet.
+
+   contribution → drives the segmented control: 'direction' | 'coaching' | 'ugc'
+   ---------------------------------------------------------------- */
+const WORK = [
+  /* ── Soren (EasySlice AI) ── */
+  { id: 'so1', brand: 'easyslice', contribution: 'direction', platform: 'instagram', tall: true,
+    title: 'Reel 01', href: 'https://www.instagram.com/reel/DVIJpkqjNJS/' },
+  { id: 'so2', brand: 'easyslice', contribution: 'direction', platform: 'instagram', tall: true,
+    title: 'Reel 02', href: 'https://www.instagram.com/reel/DUwnCj6DOps/' },
+  { id: 'so3', brand: 'easyslice', contribution: 'direction', platform: 'instagram', tall: true,
+    title: 'Reel 03', href: 'https://www.instagram.com/reel/DSlxHf5DQ_n/' },
+  { id: 'so4', brand: 'easyslice', contribution: 'direction', platform: 'instagram', tall: true,
+    title: 'Reel 04', href: 'https://www.instagram.com/reel/DU2EeLejIlK/' },
+  { id: 'so5', brand: 'easyslice', contribution: 'direction', platform: 'instagram', tall: true,
+    title: 'Reel 05', href: 'https://www.instagram.com/reel/DVOVUxAgJ8O/' },
+  { id: 'so6', brand: 'easyslice', contribution: 'direction', platform: 'instagram', tall: true,
+    title: 'Reel 06', href: 'https://www.instagram.com/reel/DW2iBVoDFA8/' },
+
+  /* ── Argil ── */
+  { id: 'ar1', brand: 'argil', contribution: 'direction', platform: 'instagram', tall: true,
+    title: 'Reel 01', href: 'https://www.instagram.com/reel/DXlZUfTj2MW/' },
+  { id: 'ar2', brand: 'argil', contribution: 'direction', platform: 'instagram', tall: true,
+    title: 'Reel 02', href: 'https://www.instagram.com/reel/DXgNkHoj8uh/' },
+
+  /* ── Manus ── */
+  { id: 'ma1', brand: 'manus', contribution: 'coaching', platform: 'instagram', tall: true,
+    title: 'The format, built together',
+    desc: 'Coached the team and helped build the format this post runs on.',
+    href: 'https://www.instagram.com/p/DWyxm0xDmJX/' },
+
+  /* ── Hustl ── */
+  { id: 'hu1', brand: 'hustl', contribution: 'ugc', platform: 'instagram', tall: true,
+    title: 'Reel 01', href: 'https://www.instagram.com/reel/DNKDJgYNwjP/' },
+  { id: 'hu2', brand: 'hustl', contribution: 'ugc', platform: 'instagram', tall: true,
+    title: 'Reel 02', href: 'https://www.instagram.com/reel/DM8RVj6J1aI/' },
+  { id: 'hu3', brand: 'hustl', contribution: 'ugc', platform: 'instagram', tall: true,
+    title: 'Reel 03', href: 'https://www.instagram.com/reel/DNNwQd8tl1h/' }
+];
+
+/* ── ACCOUNTS ─────────────────────────────────────────────────────
+   Two ways to show growth:
+
+   1. from / to        → a clean "0 → 50K" figure. Use this when you
+                         know where it started and where it landed.
+   2. series: [...]    → follower counts over time, evenly spaced,
+                         drawn as a real curve. Only fill this in with
+                         actual numbers — I deliberately left it empty
+                         rather than invent a shape for your growth.
+
+   An account with neither still renders as a credit with a link out.
+   ---------------------------------------------------------------- */
+const ACCOUNTS = [
+  { id: 'ac-easyslice', brand: 'easyslice', handle: '', platform: 'instagram',
+    window: '2 months', note: 'Creative direction',
+    from: 0, to: 50000,
+    series: [],                                    // ← add monthly numbers for a curve
+    href: '' },                                    // ← TODO: the @ / profile URL
+
+  { id: 'ac-hustl', brand: 'hustl', handle: '@joinhustl', platform: 'instagram',
+    window: '', note: 'UGC',
+    from: null, to: null,                          // ← add numbers if you have them
+    series: [],
+    href: 'https://www.instagram.com/joinhustl/reels/' }
+];
+
+/* ╔═══════════════════════════════════════════════════════════════╗
+   ║  ENGINE — no edits needed below this line.                    ║
+   ╚═══════════════════════════════════════════════════════════════╝ */
+(function () {
+  'use strict';
+
+  const $  = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+  const brandById = id => BRANDS.find(b => b.id === id);
+  const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── formatting ─────────────────────────────────────────────── */
+  function fmt(n) {
+    if (n === null || n === undefined || isNaN(n)) return '—';
+    const a = Math.abs(n);
+    if (a >= 1e9) return trim(n / 1e9) + 'B';
+    if (a >= 1e6) return trim(n / 1e6) + 'M';
+    if (a >= 1e3) return trim(n / 1e3) + 'K';
+    return String(Math.round(n * 10) / 10);
+  }
+  function trim(v) {
+    return (v >= 100 ? Math.round(v) : Math.round(v * 10) / 10).toLocaleString('en-US');
+  }
+  const esc = s => String(s).replace(/[&<>"']/g, c =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+  /* ── icons ──────────────────────────────────────────────────── */
+  const ICONS = {
+    youtube:  '<svg viewBox="0 0 24 24"><path d="M22.2 7.4a2.7 2.7 0 0 0-1.9-1.9C18.6 5 12 5 12 5s-6.6 0-8.3.5A2.7 2.7 0 0 0 1.8 7.4C1.3 9.1 1.3 12 1.3 12s0 2.9.5 4.6a2.7 2.7 0 0 0 1.9 1.9c1.7.5 8.3.5 8.3.5s6.6 0 8.3-.5a2.7 2.7 0 0 0 1.9-1.9c.5-1.7.5-4.6.5-4.6s0-2.9-.5-4.6ZM9.9 15.2V8.8l5.5 3.2-5.5 3.2Z"/></svg>',
+    tiktok:   '<svg viewBox="0 0 24 24"><path d="M16.3 2h-2.9v13.1a2.7 2.7 0 1 1-2.2-2.7V9.4a5.7 5.7 0 1 0 5.1 5.7V8.6a6.7 6.7 0 0 0 3.9 1.2V6.9a3.9 3.9 0 0 1-3.9-3.9V2Z"/></svg>',
+    instagram:'<svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.3 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.8s0 3.5-.1 4.8c-.1 1.2-.3 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.3-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.5 2.2 15.1 2.2 12s0-3.5.1-4.8c.1-1.2.3-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2Zm0 1.8c-3.1 0-3.5 0-4.7.1-.9 0-1.4.2-1.7.3-.4.2-.7.4-1 .7-.3.3-.5.6-.7 1-.1.3-.3.8-.3 1.7-.1 1.2-.1 1.6-.1 4.2s0 3 .1 4.2c0 .9.2 1.4.3 1.7.2.4.4.7.7 1 .3.3.6.5 1 .7.3.1.8.3 1.7.3 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c.9 0 1.4-.2 1.7-.3.4-.2.7-.4 1-.7.3-.3.5-.6.7-1 .1-.3.3-.8.3-1.7.1-1.2.1-1.6.1-4.2s0-3-.1-4.2c0-.9-.2-1.4-.3-1.7-.2-.4-.4-.7-.7-1-.3-.3-.6-.5-1-.7-.3-.1-.8-.3-1.7-.3-1.2-.1-1.6-.1-4.7-.1Zm0 3.1a4.9 4.9 0 1 1 0 9.8 4.9 4.9 0 0 1 0-9.8Zm0 8.1a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4Zm6.2-8.3a1.1 1.1 0 1 1-2.3 0 1.1 1.1 0 0 1 2.3 0Z"/></svg>',
+    linkedin: '<svg viewBox="0 0 24 24"><path d="M4.6 3a1.9 1.9 0 1 0 0 3.8 1.9 1.9 0 0 0 0-3.8ZM3 8.4h3.2V21H3V8.4Zm5.6 0h3.1v1.7h.1c.4-.8 1.5-1.8 3.2-1.8 3.4 0 4 2.2 4 5.1V21h-3.2v-6c0-1.4 0-3.2-2-3.2s-2.3 1.6-2.3 3.1V21H8.6V8.4Z"/></svg>',
+    x:        '<svg viewBox="0 0 24 24"><path d="M17.5 3h3.1l-6.8 7.8L21.8 21h-6.2l-4.9-6.4L5.1 21H2l7.3-8.3L2.3 3h6.4l4.4 5.8L17.5 3Zm-1.1 16.2h1.7L7.7 4.7H5.9l10.5 14.5Z"/></svg>',
+    web:      '<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm6.9 9h-3a15.3 15.3 0 0 0-1.3-5.6A8 8 0 0 1 18.9 11ZM12 4.1c.8 1.1 1.7 3.2 1.9 6.9h-3.8c.2-3.7 1.1-5.8 1.9-6.9ZM5.1 11a8 8 0 0 1 4.3-5.6A15.3 15.3 0 0 0 8.1 11h-3Zm0 2h3a15.3 15.3 0 0 0 1.3 5.6A8 8 0 0 1 5.1 13ZM12 19.9c-.8-1.1-1.7-3.2-1.9-6.9h3.8c-.2 3.7-1.1 5.8-1.9 6.9Zm2.6-1.3a15.3 15.3 0 0 0 1.3-5.6h3a8 8 0 0 1-4.3 5.6Z"/></svg>',
+    external: '<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">' +
+              '<path d="M14 4h6v6"/><path d="M20 4 10.5 13.5"/>' +
+              '<path d="M18 14.5V19a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 19V8a1.5 1.5 0 0 1 1.5-1.5H10"/></svg>'
+  };
+  const SVC_ICONS = {
+    video:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5.5" width="13" height="13" rx="3"/><path d="M15.5 10.5 21.5 7v10l-6-3.5z"/></svg>',
+    chart:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M6 20v-6M11 20V6M16 20v-9M21 20v-4"/></svg>',
+    handshake: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12.5 11 15.5c.6.6 1.5.6 2.1 0l4.4-4.4"/><path d="M2.5 8.5 6 5.5h5l3 2.5"/><path d="M21.5 8.5 18 5.5"/><path d="M2.5 8.5v6l3.5 3"/><path d="M21.5 8.5v6L18 17.5"/></svg>',
+    compass:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg>'
+  };
+  const platIcon = p => ICONS[p] || ICONS.web;
+  const PLAT_NAME = { youtube: 'YouTube', tiktok: 'TikTok', instagram: 'Instagram', x: 'X', linkedin: 'LinkedIn', web: 'Web' };
+
+  /* Instagram's public media endpoint for a post/reel URL. Serves the
+     cover frame when Instagram allows it; the <img> that uses it removes
+     itself on error, so a refusal costs nothing visually. */
+  function igMedia(href) {
+    const m = /instagram\.com\/(?:reel|p)\/([A-Za-z0-9_-]+)/.exec(href || '');
+    return m ? 'https://www.instagram.com/p/' + m[1] + '/media/?size=l' : null;
+  }
+  function autoThumb(w) {
+    if (w.thumb || !SITE.autoInstagramThumbs) return '';
+    const src = igMedia(w.href);
+    return src
+      ? '<img class="thumb__auto" src="' + esc(src) + '" alt="" loading="lazy" ' +
+        'referrerpolicy="no-referrer" onerror="this.remove()">'
+      : '';
+  }
+
+  /* ── generated thumbnail (used when no image is supplied) ───── */
+  function shade(hex, amt) {
+    const n = parseInt(hex.slice(1), 16);
+    const c = [n >> 16, (n >> 8) & 255, n & 255].map(v =>
+      Math.max(0, Math.min(255, Math.round(v + amt))));
+    return 'rgb(' + c.join(',') + ')';
+  }
+  /* Seeded so a run of reels from one brand reads as a set rather than the
+     same swatch repeated — angle and depth shift per item, hue stays put. */
+  function thumbStyle(color, seed) {
+    const s = seed || 0;
+    const angle = 118 + (s % 5) * 21;
+    const lift  = 34 - (s % 3) * 15;
+    const drop  = -38 - (s % 4) * 13;
+    return 'background:linear-gradient(' + angle + 'deg,' + shade(color, lift) + ' 0%,' +
+           color + ' 50%,' + shade(color, drop) + ' 100%)';
+  }
+
+  /* ── state ──────────────────────────────────────────────────── */
+  const state = { brands: new Set(), lane: 'all', list: [], index: -1 };
+  /* second axis: what I actually did on the work, not the file format —
+     everything here is short-form, so format would filter nothing. */
+  const LANES = [
+    { id: 'all',       label: 'All' },
+    { id: 'direction', label: 'Creative direction' },
+    { id: 'coaching',  label: 'Coaching' },
+    { id: 'ugc',       label: 'UGC' }
+  ];
+
+  /* ═════ RENDER: static chrome ═════════════════════════════════ */
+  function renderChrome() {
+    document.title = SITE.pageTitle || (SITE.name + ' — Portfolio');
+    $('#navName').textContent = SITE.name;
+    $('#navMark').textContent = SITE.initials;
+    $('#portraitInitials').textContent = SITE.initials;
+    $('#heroEyebrow').textContent = SITE.heroEyebrow;
+    const ht = $('#heroTitle');
+    if (SITE.heroTitleLines && SITE.heroTitleLines.length) {
+      // one .line per sentence — each holds a full line, never wrapping mid-thought
+      ht.innerHTML = SITE.heroTitleLines.map(l =>
+        '<span class="line">' + esc(l) + '</span>').join('');
+    } else {
+      ht.textContent = SITE.heroTitle || '';
+    }
+    $('#heroSub').textContent = SITE.heroSub;
+
+    const sec = $('#heroSecondary');
+    sec.textContent = SITE.secondaryCta.label;
+    sec.href = SITE.secondaryCta.href;
+
+    $('#statStrip').innerHTML = SITE.stats.map(s =>
+      '<div class="stat"><div class="stat__v num" data-to="' + s.value + '"' +
+      (s.display ? ' data-display="' + esc(s.display) + '"' : '') + '>0</div>' +
+      '<div class="stat__l">' + esc(s.label) + '</div></div>').join('');
+
+    /* about */
+    $('#aboutTitle').textContent = SITE.about.title;
+    $('#aboutBody').innerHTML = SITE.about.paragraphs.map(p => '<p>' + esc(p) + '</p>').join('');
+    const facts = SITE.about.facts || [];
+    $('#facts').innerHTML = facts.map(f =>
+      '<div class="fact"><dt>' + esc(f.k) + '</dt><dd>' + esc(f.v) + '</dd></div>').join('');
+    $('#facts').hidden = facts.length === 0;
+    if (SITE.about.portraitSrc) {
+      // if the file isn't committed yet the initials tile quietly stays
+      $('#portrait').insertAdjacentHTML('afterbegin',
+        '<img src="' + esc(SITE.about.portraitSrc) + '" alt="' + esc(SITE.name) +
+        '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" ' +
+        'onerror="this.remove()">');
+    }
+
+    /* services */
+    $('#svcGrid').innerHTML = SITE.services.map(s =>
+      '<article class="svc reveal"><div class="svc__i">' + (SVC_ICONS[s.icon] || SVC_ICONS.compass) + '</div>' +
+      '<h4>' + esc(s.title) + '</h4><p>' + esc(s.body) + '</p>' +
+      '<ul>' + s.bullets.map(b => '<li>' + esc(b) + '</li>').join('') + '</ul></article>').join('');
+
+    /* contact */
+    $('#contactTitle').textContent = SITE.contact.title;
+    $('#contactSub').textContent = SITE.contact.sub;
+    $('#contactMail').href = 'mailto:' + SITE.email;
+    $('#contactMail').textContent = SITE.email;
+    /* no dead links: the row disappears entirely until handles are added */
+    const socials = SITE.contact.socials || [];
+    $('#socials').innerHTML = socials.map(s =>
+      '<a class="social" href="' + esc(s.href) + '" target="_blank" rel="noreferrer noopener">' +
+      platIcon(s.icon) + esc(s.label) + '</a>').join('');
+    $('#socials').hidden = socials.length === 0;
+
+    $('#footCopy').textContent = '© ' + new Date().getFullYear() + ' ' + SITE.name + '. All rights reserved.';
+
+    buildPartners();
+  }
+
+  /* Drag-to-pan for the horizontal rows. Touch and trackpads scroll them
+     natively; this gives plain mice the same reach. A drag past 6px
+     suppresses the click underneath, so grabbing never triggers a chip. */
+  function makePannable(view, onGrab) {
+    let down = false, moved = false, startX = 0, startL = 0;
+    view.addEventListener('pointerdown', e => {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      down = true; moved = false;
+      startX = e.clientX; startL = view.scrollLeft;
+    });
+    view.addEventListener('pointermove', e => {
+      if (!down) return;
+      const dx = e.clientX - startX;
+      if (!moved && Math.abs(dx) > 6) {
+        moved = true;
+        view.classList.add('is-dragging');
+        view.setPointerCapture(e.pointerId);
+        if (onGrab) onGrab();
+      }
+      if (moved) view.scrollLeft = startL - dx;
+    });
+    const end = () => {
+      if (!down) return;
+      down = false;
+      view.classList.remove('is-dragging');
+      setTimeout(() => { moved = false; }, 0);   // outlive the click that follows pointerup
+    };
+    view.addEventListener('pointerup', end);
+    view.addEventListener('pointercancel', end);
+    view.addEventListener('click', e => {
+      if (moved) { e.stopPropagation(); e.preventDefault(); }
+    }, true);
+  }
+
+  /* Live marquee: the row glides left-to-right on its own, in real time.
+     A seamless loop needs the set repeated in the DOM — that's the wrap —
+     but the wordmarks are large enough that only ~3 fit a screen, so no
+     name ever reads twice at once. Hovering pauses it; grabbing (mouse or
+     touch) takes it over; it resumes a beat after letting go. */
+  const Partners = {
+    offset: 0, period: 1, raf: 0, last: 0,
+    speed: 44,                 // px per second, rightward
+    hovered: false, dragging: false, resumeT: 0, wired: false
+  };
+  const pmod = v => ((v % Partners.period) + Partners.period) % Partners.period;
+
+  function buildPartners() {
+    const view = $('.partners__viewport'), track = $('#partnerTrack');
+    const set = '<div class="partners__set">' + BRANDS.map(b =>
+      '<button class="wordmark" data-brand="' + b.id + '">' +
+      '<span class="wordmark__dot" style="background:' + (b.dotGrad || b.color) + '"></span>' +
+      esc(b.wordmark || b.name) +
+      (b.wordmarkSuffix
+        ? '<span class="wordmark__suffix"' +
+          (b.suffixGrad ? ' style="background-image:' + b.suffixGrad + '"' : '') + '>' +
+          esc(b.wordmarkSuffix) + '</span>'
+        : '') +
+      (b.badge
+        ? '<span class="wordmark__badge" style="background:' + b.badge.bg + '"' +
+          (b.badge.title ? ' title="' + esc(b.badge.title) + '"' : '') + '>' +
+          esc(b.badge.label) + '</span>'
+        : '') +
+      '</button>').join('') + '</div>';
+
+    track.innerHTML = set;
+    const setW = track.firstElementChild.getBoundingClientRect().width;
+    const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+    Partners.period = setW + gap;
+    const reps = Math.max(2, Math.ceil((view.clientWidth + setW) / Partners.period) + 1);
+    track.innerHTML = new Array(reps).fill(set).join('');
+    applyPartners();
+
+    if (!Partners.wired) { Partners.wired = true; wirePartners(view); }
+    startPartnersLoop();
+  }
+
+  function applyPartners() {
+    $('#partnerTrack').style.transform =
+      'translate3d(' + (Partners.offset - Partners.period).toFixed(2) + 'px,0,0)';
+  }
+
+  function startPartnersLoop() {
+    if (Partners.raf || REDUCED) return;    // reduced motion: still, but draggable
+    Partners.last = performance.now();
+    (function tick(now) {
+      const dt = Math.min(0.1, (now - Partners.last) / 1000);
+      Partners.last = now;
+      const resting = !Partners.hovered && !Partners.dragging &&
+                      now >= Partners.resumeT;
+      if (resting && dt > 0) {
+        Partners.offset = pmod(Partners.offset + Partners.speed * dt);
+        applyPartners();
+      }
+      Partners.raf = requestAnimationFrame(tick);
+    })(performance.now());
+  }
+
+  function wirePartners(view) {
+    let down = false, moved = false, startX = 0, startO = 0;
+
+    view.addEventListener('pointerenter', e => {
+      if (e.pointerType === 'mouse') Partners.hovered = true;
+    });
+    view.addEventListener('pointerleave', e => {
+      if (e.pointerType === 'mouse') Partners.hovered = false;
+    });
+
+    view.addEventListener('pointerdown', e => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      down = true; moved = false;
+      startX = e.clientX; startO = Partners.offset;
+    });
+    view.addEventListener('pointermove', e => {
+      if (!down) return;
+      const dx = e.clientX - startX;
+      if (!moved && Math.abs(dx) > 6) {
+        moved = true;
+        Partners.dragging = true;
+        view.classList.add('is-dragging');
+        view.setPointerCapture(e.pointerId);
+      }
+      if (moved) { Partners.offset = pmod(startO + dx); applyPartners(); }
+    });
+    const end = () => {
+      if (!down) return;
+      down = false;
+      Partners.dragging = false;
+      Partners.resumeT = performance.now() + 2200;   // a beat before it glides again
+      view.classList.remove('is-dragging');
+      setTimeout(() => { moved = false; }, 0);       // outlive the click that follows
+    };
+    view.addEventListener('pointerup', end);
+    view.addEventListener('pointercancel', end);
+    view.addEventListener('click', e => {
+      if (moved) { e.stopPropagation(); e.preventDefault(); }
+    }, true);
+
+    view.addEventListener('wheel', e => {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;   // vertical → page
+      Partners.offset = pmod(Partners.offset - e.deltaX);
+      Partners.resumeT = performance.now() + 2200;
+      applyPartners();
+    }, { passive: true });
+  }
+
+  /* ═════ RENDER: filter controls ═══════════════════════════════ */
+  function renderControls() {
+    const rail = $('#brandRail');
+    rail.innerHTML =
+      '<button class="chip chip--all" data-brand="" aria-pressed="true">All work' +
+      '<span class="chip__n">' + WORK.length + '</span></button>' +
+      BRANDS.map(b => {
+        // videos only, so the per-brand counts add up to the "All work" total.
+        // A partner with nothing up yet shows no number rather than a bare 0.
+        const n = WORK.filter(w => w.brand === b.id).length;
+        return '<button class="chip" data-brand="' + b.id + '" aria-pressed="false">' +
+          '<span class="mono-mark chip__mark" style="background:' + b.color + '">' + esc(b.mark) + '</span>' +
+          esc(b.name) + (n ? '<span class="chip__n">' + n + '</span>' : '') + '</button>';
+      }).join('');
+
+    /* only offer lanes that actually have work behind them */
+    $('#formatSeg').innerHTML = LANES
+      .filter(l => l.id === 'all' || WORK.some(w => w.contribution === l.id))
+      .map(l => '<button data-lane="' + l.id + '" aria-pressed="' + (l.id === state.lane) + '">' +
+        l.label + '</button>').join('');
+
+    makePannable(rail);
+    rail.addEventListener('click', e => {
+      const chip = e.target.closest('.chip');
+      if (!chip) return;
+      const id = chip.dataset.brand;
+      if (!id) state.brands.clear();
+      else state.brands.has(id) ? state.brands.delete(id) : state.brands.add(id);
+      apply();
+    });
+
+    $('#formatSeg').addEventListener('click', e => {
+      const b = e.target.closest('button');
+      if (!b) return;
+      state.lane = b.dataset.lane;
+      apply();
+    });
+
+    $('#clearBtn').addEventListener('click', () => { state.brands.clear(); apply(); });
+
+    $('#partnerTrack').addEventListener('click', e => {
+      const b = e.target.closest('[data-brand]');
+      if (!b) return;
+      state.brands.clear();
+      state.brands.add(b.dataset.brand);
+      apply();
+      document.getElementById('work').scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth' });
+    });
+  }
+
+  /* ═════ RENDER: cards ═════════════════════════════════════════ */
+  function workCard(w, i) {
+    const b = brandById(w.brand) || { name: '—', color: '#8e8e93', mark: '?' };
+    const media = w.thumb
+      ? '<img src="' + esc(w.thumb) + '" alt="">'
+      : '<span class="thumb__glyph">' + esc(b.mark) + '</span>' + autoThumb(w);
+    const plat = PLAT_NAME[w.platform] || w.platform;
+
+    /* metric strip only when real numbers exist — never a row of dashes */
+    const metrics = metric('Views', w.views) + metric('Likes', w.likes) +
+                    metric('Comments', w.comments) + metric('Shares', w.shares);
+
+    const ext = w.href
+      ? '<a class="card__ext" href="' + esc(w.href) + '" target="_blank" rel="noreferrer noopener" ' +
+        'aria-label="Open ' + esc(w.title) + ' on ' + esc(plat) + '">' + ICONS.external + '</a>'
+      : '';
+
+    return '<article class="card is-out" data-brand="' + w.brand +
+      '" data-lane="' + w.contribution + '" data-id="' + w.id + '">' +
+      '<span class="thumb' + (w.tall ? ' thumb--tall' : '') + '" style="' + thumbStyle(b.color, i) + '">' + media +
+        '<span class="thumb__badges"><span class="badge">' + platIcon(w.platform) + esc(plat) + '</span>' +
+          (w.duration ? '<span class="badge">' + esc(w.duration) + '</span>' : '') + '</span>' +
+        '<span class="thumb__play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>' +
+        (w.views ? '<span class="thumb__stat num">' + fmt(w.views) + ' views</span>' : '') +
+      '</span>' +
+      '<div class="card__body">' +
+        '<p class="card__brand">' + esc(b.name) + (w.date ? ' · ' + esc(w.date) : '') + '</p>' +
+        '<h3 class="card__title">' + esc(w.title) + '</h3>' +
+        (metrics ? '<div class="card__metrics">' + metrics + '</div>' : '') +
+      '</div>' +
+      '<button class="card__hit" data-id="' + w.id + '" aria-label="View details: ' +
+        esc(w.title) + ' for ' + esc(b.name) + '"></button>' + ext +
+    '</article>';
+  }
+  function metric(label, v) {
+    if (v === undefined || v === null) return '';
+    return '<span class="card__metric"><b class="num">' + fmt(v) + '</b>' + label + '</span>';
+  }
+
+  function sparkline(series, color) {
+    const W = 300, H = 62, P = 3;
+    const min = Math.min.apply(null, series), max = Math.max.apply(null, series);
+    const span = (max - min) || 1;
+    const pts = series.map((v, i) => [
+      P + (i / Math.max(1, series.length - 1)) * (W - P * 2),
+      H - P - ((v - min) / span) * (H - P * 2)
+    ]);
+    // smooth the polyline with mid-point quadratics
+    let d = 'M' + pts[0][0].toFixed(1) + ',' + pts[0][1].toFixed(1);
+    for (let i = 1; i < pts.length; i++) {
+      const p = pts[i - 1], c = pts[i];
+      const mx = (p[0] + c[0]) / 2, my = (p[1] + c[1]) / 2;
+      d += ' Q' + p[0].toFixed(1) + ',' + p[1].toFixed(1) + ' ' + mx.toFixed(1) + ',' + my.toFixed(1);
+    }
+    d += ' L' + pts[pts.length - 1][0].toFixed(1) + ',' + pts[pts.length - 1][1].toFixed(1);
+    const gid = 'g' + Math.random().toString(36).slice(2, 8);
+    return '<svg class="spark" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" aria-hidden="true">' +
+      '<defs><linearGradient id="' + gid + '" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0" stop-color="' + color + '" stop-opacity=".26"/>' +
+      '<stop offset="1" stop-color="' + color + '" stop-opacity="0"/></linearGradient></defs>' +
+      '<path class="area" d="' + d + ' L' + (W - P) + ',' + H + ' L' + P + ',' + H + ' Z" fill="url(#' + gid + ')"/>' +
+      '<path class="line" d="' + d + '" stroke="' + color + '"/>' +
+      '<circle cx="' + pts[pts.length - 1][0].toFixed(1) + '" cy="' + pts[pts.length - 1][1].toFixed(1) +
+        '" r="3.2" fill="' + color + '"/></svg>';
+  }
+
+  function acctCard(a) {
+    const b = brandById(a.brand) || { name: '—', color: '#8e8e93' };
+    const series = Array.isArray(a.series) && a.series.length > 1 ? a.series : null;
+
+    /* a real curve when there's a series, otherwise the start/end pair,
+       otherwise just a credit — never an invented trajectory */
+    const has = v => v === 0 || (v !== null && v !== undefined);
+    const from = series ? series[0] : (has(a.from) ? a.from : null);
+    const now  = series ? series[series.length - 1] : (has(a.to) ? a.to : null);
+    const hasFigure = has(now);
+
+    let delta = '';
+    if (hasFigure) {
+      if (from > 0) {
+        const m = now / from;
+        delta = (m >= 10 ? Math.round(m) : Math.round(m * 10) / 10) + '×';
+      } else {
+        delta = '+' + fmt(now);
+      }
+    }
+
+    const figure = hasFigure
+      ? '<div class="acct__figure"><span class="acct__now num">' + fmt(now) + '</span>' +
+          (has(from) ? '<span class="acct__from num">from ' + fmt(from) + '</span>' : '') + '</div>' +
+        (series
+          ? sparkline(series, b.color)
+          : '<div class="acct__ramp"><span style="background:linear-gradient(90deg,' +
+            b.color + '14,' + b.color + ')"></span></div>')
+      : '';
+
+    const foot = [
+      a.window ? '<span>' + esc(a.window) + '</span>' : '',
+      a.href ? '<a class="acct__link" href="' + esc(a.href) + '" target="_blank" ' +
+               'rel="noreferrer noopener">View channel ›</a>' : '',
+      a.note ? '<span class="tag">' + esc(a.note) + '</span>' : ''
+    ].filter(Boolean);
+
+    return '<article class="acct is-out" data-brand="' + a.brand + '">' +
+      '<div class="acct__top">' +
+        '<span class="mono-mark" style="background:' + b.color + '">' + platIcon(a.platform) + '</span>' +
+        '<div><div class="acct__handle">' + esc(a.handle || b.name) + '</div>' +
+        '<div class="acct__plat">' + esc(PLAT_NAME[a.platform] || a.platform) +
+          (a.handle ? ' · ' + esc(b.name) : '') + '</div></div>' +
+        (delta ? '<span class="acct__delta">' + delta + '</span>' : '') +
+      '</div>' + figure +
+      (foot.length ? '<div class="acct__foot">' + foot.join('') + '</div>' : '') +
+    '</article>';
+  }
+
+  function renderCollections() {
+    $('#workGrid').innerHTML = WORK.map(workCard).join('');
+    $('#acctGrid').innerHTML = ACCOUNTS.map(acctCard).join('');
+    // platform glyphs inside the round account marks need sizing
+    $$('.acct__top .mono-mark svg').forEach(s => {
+      s.style.width = '15px'; s.style.height = '15px'; s.style.fill = '#fff';
+    });
+    /* the corner link is a sibling above the hit target, so clicking it
+       navigates to the post instead of opening the sheet */
+    $('#workGrid').addEventListener('click', e => {
+      const hit = e.target.closest('.card__hit');
+      if (hit) openSheet(hit.dataset.id);
+    });
+  }
+
+  /* ═════ FILTERING ═════════════════════════════════════════════ */
+  function matchesBrand(item) {
+    return state.brands.size === 0 || state.brands.has(item.brand);
+  }
+  function matchesLane(w) {
+    return state.lane === 'all' || w.contribution === state.lane;
+  }
+
+  function apply() {
+    const sel = state.brands;
+
+    /* chips */
+    $$('#brandRail .chip').forEach(c => {
+      const id = c.dataset.brand;
+      c.setAttribute('aria-pressed', String(id ? sel.has(id) : sel.size === 0));
+    });
+    $$('#formatSeg button').forEach(b =>
+      b.setAttribute('aria-pressed', String(b.dataset.lane === state.lane)));
+    $('#clearBtn').hidden = sel.size === 0;
+
+    /* which items survive */
+    const workOn = WORK.filter(w => matchesBrand(w) && matchesLane(w));
+    const acctOn = ACCOUNTS.filter(matchesBrand);
+    state.list = workOn;
+
+    swap($('#workGrid'), '.card', workOn.map(w => w.id), 'id');
+    swap($('#acctGrid'), '.acct', acctOn.map(a => a.brand), 'brand');
+
+    $('#workEmpty').hidden = workOn.length > 0;
+    $('#acctEmpty').hidden = acctOn.length > 0;
+
+    /* A partner with no videos yet reads as "coming", not as a dead filter */
+    if (!workOn.length) {
+      const dry = BRANDS.filter(b => sel.has(b.id) && !WORK.some(w => w.brand === b.id));
+      const one = dry.length === 1 ? dry[0] : null;
+      $('#emptyTitle').textContent = one ? one.name : 'Nothing here yet';
+      $('#emptyBody').textContent = one
+        ? 'Selected work for ' + one.name + ' is going up shortly.'
+        : 'No work matches this combination of filters.';
+    }
+
+    /* counter — same string in the sticky bar (desktop) and inline (phones).
+       The views clause only appears once there are real view counts. */
+    const views = workOn.reduce((s, w) => s + (w.views || 0), 0);
+    const parts = [
+      '<strong>' + workOn.length + '</strong> ' + (workOn.length === 1 ? 'video' : 'videos')
+    ];
+    if (acctOn.length) {
+      parts.push('<strong>' + acctOn.length + '</strong> ' +
+        (acctOn.length === 1 ? 'account' : 'accounts'));
+    }
+    if (views > 0) parts.push('<strong class="num">' + fmt(views) + '</strong> views');
+    const label = parts.join(' · ');
+    $('#count').innerHTML = label;
+    $('#countInline').innerHTML = label;
+
+    renderSummary(workOn, acctOn);
+  }
+
+  /* fade out → re-lay-out → stagger in */
+  function swap(root, sel, keep, attr) {
+    const nodes = $$(sel, root);
+    const show = node => keep.indexOf(attr === 'id' ? node.dataset.id : node.dataset.brand) > -1;
+
+    if (REDUCED) {
+      nodes.forEach(n => { n.hidden = !show(n); n.classList.remove('is-out'); });
+      return;
+    }
+    nodes.forEach(n => { if (!n.hidden) n.classList.add('is-out'); });
+    setTimeout(() => {
+      let i = 0;
+      nodes.forEach(n => {
+        const on = show(n);
+        n.hidden = !on;
+        if (!on) return;
+        n.classList.add('is-out');
+        const delay = Math.min(i++, 10) * 34;
+        setTimeout(() => n.classList.remove('is-out'), delay);
+      });
+    }, 170);
+  }
+
+  /* ═════ SELECTION SUMMARY ═════════════════════════════════════ */
+  function renderSummary(workOn, acctOn) {
+    const box = $('#summary');
+    if (state.brands.size === 0) { box.hidden = true; return; }
+    const picked = BRANDS.filter(b => state.brands.has(b.id));
+    const one = picked.length === 1 ? picked[0] : null;
+
+    /* Stats are only ever things I can back up: the brand's own stated
+       results, plus counts derived from the data itself. */
+    const stats = [];
+    picked.forEach(b => (b.highlights || []).forEach(h =>
+      stats.push({ v: h.v, l: h.l })));
+
+    const views = workOn.reduce((s, w) => s + (w.views || 0), 0);
+    if (views > 0) stats.push({ v: fmt(views), l: 'Views delivered' });
+
+    stats.push({ v: String(workOn.length), l: workOn.length === 1 ? 'Video' : 'Videos' });
+
+    const meta = one
+      ? [one.category, one.year].filter(Boolean).join(' · ')
+      : 'Combined view';
+
+    box.innerHTML =
+      '<div>' +
+        '<div class="summary__marks">' + picked.slice(0, 5).map(b =>
+          '<span class="mono-mark" style="background:' + b.color + '">' + esc(b.mark) + '</span>').join('') +
+        '</div>' +
+        (one && one.role ? '<span class="summary__role">' + esc(one.role) + '</span>' : '') +
+        '<h3>' + esc(one ? one.name : picked.length + ' partners selected') + '</h3>' +
+        '<p>' + esc(one ? one.summary : picked.map(b => b.name).join(' · ')) + '</p>' +
+        (meta ? '<p class="summary__meta">' + esc(meta) + '</p>' : '') +
+      '</div>' +
+      '<div class="summary__stats">' + stats.slice(0, 4).map(s =>
+        '<div class="mini"><div class="mini__v num">' + esc(s.v) + '</div>' +
+        '<div class="mini__l">' + esc(s.l) + '</div></div>').join('') +
+      '</div>';
+    box.hidden = false;
+    box.classList.add('is-in');
+  }
+
+  /* ═════ DETAIL SHEET ══════════════════════════════════════════ */
+  const scrim = $('#scrim');
+  let lastFocus = null;
+
+  function openSheet(id) {
+    const i = state.list.findIndex(w => w.id === id);
+    state.index = i > -1 ? i : 0;
+    if (!state.list.length) return;
+    lastFocus = document.activeElement;
+    fillSheet();
+    scrim.classList.add('is-open');
+    document.body.classList.add('is-locked');
+    $('#sheetClose').focus();
+  }
+  function closeSheet() {
+    scrim.classList.remove('is-open');
+    document.body.classList.remove('is-locked');
+    if (lastFocus) lastFocus.focus();
+  }
+  function step(n) {
+    if (!state.list.length) return;
+    state.index = (state.index + n + state.list.length) % state.list.length;
+    fillSheet();
+  }
+  function fillSheet() {
+    const w = state.list[state.index];
+    if (!w) return;
+    const b = brandById(w.brand) || { name: '—', color: '#8e8e93', mark: '?' };
+
+    const hero = $('#sheetHero');
+    hero.setAttribute('style', thumbStyle(b.color, WORK.findIndex(x => x.id === w.id)));
+    hero.innerHTML = w.thumb
+      ? '<img src="' + esc(w.thumb) + '" alt="" style="width:100%;height:100%;object-fit:cover">'
+      : '<span class="thumb__glyph">' + esc(b.mark) + '</span>' + autoThumb(w);
+
+    const plat = PLAT_NAME[w.platform] || w.platform;
+    $('#sheetEyebrow').textContent =
+      [b.name, plat, w.date, w.duration].filter(Boolean).join(' · ');
+    $('#sheetTitle').textContent = w.title;
+    $('#sheetDesc').textContent = w.desc || b.summary || '';
+
+    const mx = [['Views', w.views], ['Likes', w.likes], ['Comments', w.comments], ['Shares', w.shares]]
+      .filter(m => m[1] !== undefined && m[1] !== null);
+    $('#sheetMetrics').innerHTML = mx.map(m =>
+      '<div class="mini"><div class="mini__v num">' + fmt(m[1]) + '</div>' +
+      '<div class="mini__l">' + m[0] + '</div></div>').join('');
+    $('#sheetMetrics').hidden = mx.length === 0;
+
+    /* fall back to the brand's own credits so a video with no bespoke
+       copy still says something accurate rather than showing an empty column */
+    const did = (w.role && w.role.length ? w.role : b.did) || [];
+    const res = (w.result && w.result.length ? w.result : b.result) || [];
+    $('#sheetRole').innerHTML = did.map(r => '<li>' + esc(r) + '</li>').join('');
+    $('#sheetResult').innerHTML = res.map(r => '<li>' + esc(r) + '</li>').join('');
+    $('#sheetDid').hidden = did.length === 0;
+    $('#sheetOut').hidden = res.length === 0;
+
+    const link = $('#sheetLink');
+    if (w.href && w.href !== '#') {
+      link.href = w.href;
+      link.textContent = 'Watch on ' + plat;
+      link.hidden = false;
+    } else { link.hidden = true; }
+
+    const many = state.list.length > 1;
+    $('#sheetPrev').hidden = !many;
+    $('#sheetNext').hidden = !many;
+    $('#sheet').scrollTop = 0;
+  }
+
+  $('#sheetClose').addEventListener('click', closeSheet);
+  $('#sheetPrev').addEventListener('click', () => step(-1));
+  $('#sheetNext').addEventListener('click', () => step(1));
+  scrim.addEventListener('mousedown', e => { if (e.target === scrim) closeSheet(); });
+  document.addEventListener('keydown', e => {
+    if (!scrim.classList.contains('is-open')) return;
+    if (e.key === 'Escape') closeSheet();
+    if (e.key === 'ArrowRight') step(1);
+    if (e.key === 'ArrowLeft') step(-1);
+    if (e.key === 'Tab') {
+      const f = $$('button, a[href]:not([hidden])', $('#sheet')).filter(el => !el.hidden && el.offsetParent !== null);
+      if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+
+  /* ═════ THEME ═════════════════════════════════════════════════ */
+  const SUN = '<circle cx="12" cy="12" r="4.2"/><path d="M12 2.2v2.4M12 19.4v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.2 12h2.4M19.4 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"/>';
+  const MOON = '<path d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1Z"/>';
+
+  function systemDark() { return window.matchMedia('(prefers-color-scheme: dark)').matches; }
+  function currentDark() {
+    const t = document.documentElement.getAttribute('data-theme');
+    return t ? t === 'dark' : systemDark();
+  }
+  function paintThemeIcon() { $('#themeIcon').innerHTML = currentDark() ? MOON : SUN; }
+
+  $('#themeBtn').addEventListener('click', () => {
+    const next = currentDark() ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem('brand-theme', next); } catch (e) {}
+    paintThemeIcon();
+  });
+
+  /* ═════ NAV ═══════════════════════════════════════════════════ */
+  const sheetNav = $('#navSheet');
+  $('#burger').addEventListener('click', () => {
+    const open = sheetNav.classList.toggle('is-open');
+    $('#burger').setAttribute('aria-expanded', String(open));
+  });
+  sheetNav.addEventListener('click', e => {
+    if (e.target.tagName === 'A') {
+      sheetNav.classList.remove('is-open');
+      $('#burger').setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  /* active section highlighting */
+  function spy() {
+    const links = $$('#navLinks a');
+    const secs = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    if (!secs.length) return;
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if (!en.isIntersecting) return;
+        links.forEach(a => a.classList.toggle('is-active',
+          a.getAttribute('href') === '#' + en.target.id));
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    secs.forEach(s => io.observe(s));
+  }
+
+  /* ═════ REVEAL + COUNTERS ═════════════════════════════════════ */
+  function reveal() {
+    const io = new IntersectionObserver((entries, obs) => {
+      entries.forEach(en => {
+        if (!en.isIntersecting) return;
+        en.target.classList.add('is-in');
+        obs.unobserve(en.target);
+        if (en.target.id === 'statStrip') countUp();
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    $$('.reveal').forEach(el => io.observe(el));
+  }
+
+  function countUp() {
+    if (REDUCED) {
+      $$('#statStrip .stat__v').forEach(el =>
+        el.textContent = el.dataset.display || fmt(+el.dataset.to));
+      return;
+    }
+    $$('#statStrip .stat__v').forEach((el, i) => {
+      const to = +el.dataset.to, dur = 1500, start = performance.now() + i * 90;
+      (function tick(now) {
+        const t = Math.min(1, Math.max(0, (now - start) / dur));
+        const e = 1 - Math.pow(1 - t, 4);
+        el.textContent = t === 1 ? (el.dataset.display || fmt(to)) : fmt(to * e);
+        if (t < 1) requestAnimationFrame(tick);
+      })(performance.now());
+    });
+  }
+
+  /* ═════ MOTION — spring physics for the first page ════════════
+     The site ships as one dependency-free file, so rather than load
+     React + Framer Motion for the landing, this is the same model
+     Framer uses — a damped harmonic oscillator, integrated per frame —
+     with parameters in the same vocabulary:
+
+       entrance  stiffness 170 · damping 24 · mass 1   (~400ms settle)
+       bouncy    stiffness 300 · damping 19 · mass 1   (button arrival)
+       hover     stiffness 550 · damping 32 · mass 1   (~200ms settle)
+       exit      stiffness 320 · damping 34 · mass 1   (~300ms, no bounce)
+
+     Non-spring transitions use --e-standard/--e-exit at --d-hover 200ms
+     and --d-exit 300ms. Staggers: 50ms siblings, 100ms between groups.
+     Only transform and opacity are ever animated; reduced-motion snaps
+     every spring straight to its final frame.                        */
+  const Motion = (() => {
+    const P = {
+      entrance: { stiffness: 170, damping: 24, mass: 1 },
+      bouncy:   { stiffness: 300, damping: 19, mass: 1 },
+      hover:    { stiffness: 550, damping: 32, mass: 1 },
+      exit:     { stiffness: 320, damping: 34, mass: 1 }
+    };
+    const live = new Set();
+    const clamp01 = v => Math.max(0, Math.min(1, v));
+
+    function apply(el, from, to, p) {
+      if (from.y !== undefined || from.scale !== undefined) {
+        const y = from.y === undefined ? 0 : from.y + (to.y - from.y) * p;
+        const s = from.scale === undefined ? 1 : from.scale + (to.scale - from.scale) * p;
+        el.style.transform = 'translate3d(0,' + y.toFixed(2) + 'px,0) scale(' + s.toFixed(4) + ')';
+      }
+      if (from.opacity !== undefined) {
+        el.style.opacity = clamp01(from.opacity + (to.opacity - from.opacity) * p);
+      }
+    }
+
+    function animate(el, props, preset, opts) {
+      opts = opts || {};
+      const from = {}, to = {};
+      Object.keys(props).forEach(k => { from[k] = props[k][0]; to[k] = props[k][1]; });
+
+      if (REDUCED) {
+        apply(el, from, to, 1);
+        if (opts.onDone) opts.onDone();
+        return { stop() {} };
+      }
+
+      apply(el, from, to, 0);            // hold the start pose through any delay
+      const k = P[preset] || P.entrance;
+      /* Fixed 120Hz substeps over wall-clock time, not one step per frame:
+         a throttled tab (background, busy main thread, cheap phone) drops
+         frames but the spring still lands on schedule instead of running
+         in slow motion. */
+      const H = 1 / 120;
+      let x = 0, v = 0, acc = 0, raf = 0, delayT = 0, last = 0;
+      const h = { stop() { cancelAnimationFrame(raf); clearTimeout(delayT); live.delete(h); } };
+
+      function frame(now) {
+        acc += Math.min((now - last) / 1000, 0.25);
+        last = now;
+        while (acc >= H) {
+          v += ((-k.stiffness * (x - 1) - k.damping * v) / k.mass) * H;
+          x += v * H;
+          acc -= H;
+        }
+        if (Math.abs(x - 1) < 0.001 && Math.abs(v) < 0.01) {
+          apply(el, from, to, 1);
+          live.delete(h);
+          if (opts.onUpdate) opts.onUpdate(1);
+          if (opts.onDone) opts.onDone();
+          return;
+        }
+        apply(el, from, to, x);
+        if (opts.onUpdate) opts.onUpdate(x);
+        raf = requestAnimationFrame(frame);
+      }
+      const start = () => { last = performance.now(); raf = requestAnimationFrame(frame); };
+      if (opts.delay) delayT = setTimeout(start, opts.delay); else start();
+      live.add(h);
+      return h;
+    }
+
+    return { animate, stopAll() { Array.from(live).forEach(h => h.stop()); } };
+  })();
+
+  /* ═════ INTRO LOADER ══════════════════════════════════════════ */
+  function runIntro(done) {
+    const cfg  = SITE.intro || {};
+    const total = cfg.ms || 10000;
+    const el   = $('#intro');
+    const out  = $('#introType');
+    const bar  = $('#introBar');
+    const phrases = (cfg.phrases && cfg.phrases.length) ? cfg.phrases : ['loading'];
+
+    $('#introEyebrow').textContent = cfg.eyebrow || '';
+    if (cfg.cta) $('#introEnterLabel').textContent = cfg.cta;
+    document.documentElement.classList.add('intro-up');
+
+    let finished = false, readyShown = false;
+    const timers = [];
+    const wait = (fn, ms) => timers.push(setTimeout(fn, ms));
+
+    const centerEls = [$('#introEyebrow'), $('.intro__line', el)];
+    const chromeEls = [$('.intro__hint', el), $('#introSkip'), $('.intro__bar', el)];
+
+    function finish() {
+      if (finished) return;
+      finished = true;
+      timers.forEach(clearTimeout);
+      Motion.stopAll();
+      el.classList.add('is-done');
+      el.style.willChange = 'transform, opacity';
+      Motion.animate(el, { scale: [1, 1.05], opacity: [1, 0] }, 'exit');   // 300ms class
+      document.documentElement.classList.remove('intro-up');
+      wait(() => { el.hidden = true; el.style.willChange = ''; }, 380);
+      done();
+    }
+
+    /* The landing holds until the visitor comes down themselves: the typing
+       runs its course, then the button springs in and waits. No auto-advance. */
+    function ready() {
+      if (finished || readyShown) return;
+      readyShown = true;
+      out.textContent = phrases[phrases.length - 1];
+      el.classList.add('is-ready');
+      /* chrome opacity goes back to CSS so the .is-ready fade-out can run */
+      chromeEls.forEach(n => { n.style.transition = ''; n.style.opacity = ''; });
+      Motion.animate($('.intro__cta', el),
+        { y: [18, 0], scale: [0.92, 1], opacity: [0, 1] }, 'bouncy');
+      const enter = $('#introEnter');
+      if (enter) enter.focus({ preventScroll: true });
+    }
+
+    /* button micro-interactions: retargetable hover/press springs */
+    (function wireEnter() {
+      const btn = $('#introEnter');
+      if (!btn) return;
+      let cur = 1, anim = null;
+      function toScale(target) {
+        if (REDUCED) return;
+        if (anim) anim.stop();
+        const from = cur;
+        anim = Motion.animate(btn, { scale: [from, target] }, 'hover',
+          { onUpdate(p) { cur = from + (target - from) * p; } });
+      }
+      btn.addEventListener('pointerenter', () => toScale(1.045));
+      btn.addEventListener('pointerleave', () => toScale(1));
+      btn.addEventListener('pointerdown',  () => toScale(0.96));
+      btn.addEventListener('pointerup',    () => toScale(1.045));
+    })();
+
+    /* early exits: the enter button, Skip, a click anywhere, Esc or Space */
+    $('#introEnter').addEventListener('click', finish);
+    $('#introSkip').addEventListener('click', finish);
+    el.addEventListener('click', finish);
+    document.addEventListener('keydown', function onKey(e) {
+      if (finished) { document.removeEventListener('keydown', onKey); return; }
+      if (e.key === 'Escape' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); finish(); }
+    });
+
+    /* Type → hold → delete, slow enough to watch happen. The last pass is
+       left standing, and the button rises under the finished phrase.
+       The typewriter runs for reduced-motion visitors too — character
+       changes aren't spatial motion; the springs are what snap for them. */
+    const TYPE = 96, DEL = 40, HOLD = 750;
+    let i = 0, t0 = 0;
+    const elapsed = () => performance.now() - t0;
+
+    function cycle() {
+      if (finished) return;
+      const text = phrases[i % phrases.length];
+      const cost = text.length * TYPE + HOLD + text.length * DEL + 260;
+      // is there room for another full loop after this one?
+      const last = (total - elapsed()) < cost * 2;
+      type(text, () => {
+        if (finished) return;
+        if (last) { wait(ready, Math.max(300, total - elapsed())); return; }
+        wait(() => erase(text, () => { i++; cycle(); }), HOLD);
+      });
+    }
+
+    function type(text, cb) {
+      let n = 0;
+      (function step() {
+        if (finished) return;
+        out.textContent = text.slice(0, ++n);
+        if (n < text.length) wait(step, TYPE); else cb();
+      })();
+    }
+    function erase(text, cb) {
+      let n = text.length;
+      (function step() {
+        if (finished) return;
+        out.textContent = text.slice(0, --n);
+        if (n > 0) wait(step, DEL); else wait(cb, 240);
+      })();
+    }
+
+    function begin() {
+      if (finished || t0) return;
+      t0 = performance.now();
+
+      /* entrance choreography: 50ms between siblings, 100ms between groups.
+         Chrome opacity is JS-held during the springs (transition: none) so
+         the CSS fade rules can't fight the per-frame values. Under reduced
+         motion every spring snaps to its final frame. */
+      centerEls.forEach((n, ix) =>
+        Motion.animate(n, { y: [18, 0], opacity: [0, 1] }, 'entrance', { delay: ix * 50 }));
+      chromeEls.forEach((n, ix) => {
+        n.style.transition = 'none';
+        Motion.animate(n, { opacity: [0, 1] }, 'entrance', { delay: 150 + ix * 50 });
+      });
+
+      bar.style.transition = 'width ' + total + 'ms linear';
+      requestAnimationFrame(() => { bar.style.width = '100%'; });
+
+      wait(cycle, 280);                // let the line spring in before the
+                                       // first character lands
+      wait(ready, total + 150);        // hard stop: whatever the typing is
+                                       // doing, the door opens at ten seconds
+    }
+
+    /* Don't run the show to an empty theatre: a tab opened in the
+       background holds the sequence until it's actually being watched. */
+    if (document.hidden) {
+      document.addEventListener('visibilitychange', function onVis() {
+        if (document.hidden) return;
+        document.removeEventListener('visibilitychange', onVis);
+        begin();
+      });
+    } else {
+      begin();
+    }
+  }
+
+  /* ═════ ACCESS GATE ═══════════════════════════════════════════ */
+  function gate() {
+    if (!ACCESS.enabled) return true;
+    let ok = false;
+    try { ok = sessionStorage.getItem('brand-access') === '1'; } catch (e) {}
+    if (ok) return true;
+
+    document.documentElement.classList.add('gated');
+    $('#gateHint').textContent = ACCESS.hint;
+    $('#gateForm').addEventListener('submit', e => {
+      e.preventDefault();
+      if ($('#gateInput').value.trim() === String(ACCESS.passcode)) {
+        try { sessionStorage.setItem('brand-access', '1'); } catch (err) {}
+        document.documentElement.classList.remove('gated');
+        boot();
+      } else {
+        $('#gateErr').textContent = "That's not it. Try again.";
+        $('#gateInput').value = '';
+        $('#gateInput').focus();
+      }
+    });
+    setTimeout(() => $('#gateInput').focus(), 60);
+    return false;
+  }
+
+  /* ═════ BOOT ══════════════════════════════════════════════════ */
+  let booted = false;
+  function boot() {
+    if (booted) return;
+    booted = true;
+    renderChrome();
+    renderControls();
+    renderCollections();
+    apply();
+    spy();
+    paintThemeIcon();
+
+    /* Render first, then play the intro over a finished page, and hold the
+       scroll reveals back so the hero animates in as the intro clears. */
+    const on = SITE.intro && SITE.intro.ms > 0;
+    if (on) runIntro(reveal);
+    else { $('#intro').hidden = true; reveal(); }
+  }
+
+  /* Dark is the house default — the page continues the loader's black.
+     A saved manual choice (the sun/moon toggle) still wins. */
+  let savedTheme = null;
+  try { savedTheme = localStorage.getItem('brand-theme'); } catch (e) {}
+  document.documentElement.setAttribute('data-theme', savedTheme || 'dark');
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', paintThemeIcon);
+
+  /* marquee geometry depends on viewport width; rebuild after resizes */
+  let rzT;
+  window.addEventListener('resize', () => {
+    clearTimeout(rzT);
+    rzT = setTimeout(() => { if (booted) buildPartners(); }, 180);
+  });
+
+  if (gate()) boot();
+})();
+</script>
+</body>
+</html>
