@@ -526,6 +526,11 @@ section[id], div[id], span[id] { scroll-margin-top: calc(var(--nav-h) + 8px); }
 }
 .thumb--tall { aspect-ratio: 4 / 5; }
 .thumb img { width: 100%; height: 100%; object-fit: cover; }
+/* Best-effort Instagram frame: absolutely layered over the branded tile,
+   under the dark gradient and badges. If Instagram declines the request
+   the img removes itself and the tile underneath is what ships. */
+.thumb__auto { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
 /* brand monogram sits in the corner so it never fights the play button */
 .thumb__glyph {
   position: absolute; left: 14px; bottom: 4px;
@@ -1263,9 +1268,17 @@ const SITE = {
     cta: 'Down to my portfolio'
   },
 
-  heroEyebrow: 'Creative Director · UGC Programs',
-  heroTitle: 'I restructure UGC programs until the numbers move.',
-  heroSub: 'Creative direction, format design, and coaching for AI and consumer startups — from a standing-start account to 50K followers, and a single week that did 3M views.',
+  /* Best-effort real thumbnails: each card tries Instagram's public media
+     endpoint for its own reel. When Instagram serves it, the frame layers
+     over the branded tile; when it declines (logged-out visitors in some
+     regions, rate limits), the tile stays and nothing looks broken. An
+     explicit thumb: 'assets/x.jpg' on a WORK item always wins — committed
+     screenshots are the only version Instagram can't take away.        */
+  autoInstagramThumbs: true,
+
+  heroEyebrow: 'Growth · GTM · Startups',
+  heroTitle: "Building an audience is easy. Reaching your buyer isn't.",
+  heroSub: 'I handle Growth and GTM for startups. I build content into an acquisition channel, not an audience.',
   secondaryCta: { label: 'Get in touch', href: '#contact' },
 
   /* Every number here is one you gave me. `value` animates on scroll;
@@ -1293,7 +1306,7 @@ const SITE = {
   },
 
   contact: {
-    title: "Let's rebuild your UGC program.",
+    title: "Let's rebuild your growth pipeline.",
     sub: 'Open to creative direction, program restructures, and coaching for in-house teams.',
     /* TODO: add your own handles. Empty array = the row is hidden, so
        there are no dead links on the page until you fill it in. */
@@ -1382,10 +1395,10 @@ const BRANDS = [
               than guessing. A card with no numbers renders clean; a
               card with numbers shows a metric strip. I left them out
               because I don't have them.
-   • thumb  — optional. Screenshot the reel, save it to assets/, and
-              set thumb: 'assets/soren-01.jpg'. Without it you get the
-              generated brand-gradient tile, which is intentional and
-              fine to ship.
+   • thumb  — optional override. With autoInstagramThumbs on, every card
+              already tries the reel's own Instagram thumbnail and falls
+              back to the brand-gradient tile. Committing a screenshot
+              (thumb: 'assets/soren-01.jpg') beats both — it always loads.
    • desc   — one line of context shown in the detail sheet.
 
    contribution → drives the segmented control: 'direction' | 'coaching' | 'ugc'
@@ -1498,6 +1511,22 @@ const ACCOUNTS = [
   };
   const platIcon = p => ICONS[p] || ICONS.web;
   const PLAT_NAME = { youtube: 'YouTube', tiktok: 'TikTok', instagram: 'Instagram', x: 'X', linkedin: 'LinkedIn', web: 'Web' };
+
+  /* Instagram's public media endpoint for a post/reel URL. Serves the
+     cover frame when Instagram allows it; the <img> that uses it removes
+     itself on error, so a refusal costs nothing visually. */
+  function igMedia(href) {
+    const m = /instagram\.com\/(?:reel|p)\/([A-Za-z0-9_-]+)/.exec(href || '');
+    return m ? 'https://www.instagram.com/p/' + m[1] + '/media/?size=l' : null;
+  }
+  function autoThumb(w) {
+    if (w.thumb || !SITE.autoInstagramThumbs) return '';
+    const src = igMedia(w.href);
+    return src
+      ? '<img class="thumb__auto" src="' + esc(src) + '" alt="" loading="lazy" ' +
+        'referrerpolicy="no-referrer" onerror="this.remove()">'
+      : '';
+  }
 
   /* ── generated thumbnail (used when no image is supplied) ───── */
   function shade(hex, amt) {
@@ -1665,7 +1694,7 @@ const ACCOUNTS = [
     const b = brandById(w.brand) || { name: '—', color: '#8e8e93', mark: '?' };
     const media = w.thumb
       ? '<img src="' + esc(w.thumb) + '" alt="">'
-      : '<span class="thumb__glyph">' + esc(b.mark) + '</span>';
+      : '<span class="thumb__glyph">' + esc(b.mark) + '</span>' + autoThumb(w);
     const plat = PLAT_NAME[w.platform] || w.platform;
 
     /* metric strip only when real numbers exist — never a row of dashes */
@@ -1945,7 +1974,7 @@ const ACCOUNTS = [
     hero.setAttribute('style', thumbStyle(b.color, WORK.findIndex(x => x.id === w.id)));
     hero.innerHTML = w.thumb
       ? '<img src="' + esc(w.thumb) + '" alt="" style="width:100%;height:100%;object-fit:cover">'
-      : '<span class="thumb__glyph">' + esc(b.mark) + '</span>';
+      : '<span class="thumb__glyph">' + esc(b.mark) + '</span>' + autoThumb(w);
 
     const plat = PLAT_NAME[w.platform] || w.platform;
     $('#sheetEyebrow').textContent =
