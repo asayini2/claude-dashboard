@@ -754,14 +754,15 @@ section[id], div[id], span[id] { scroll-margin-top: calc(var(--nav-h) + 8px); }
 }
 html.intro-up { overflow: hidden; }
 
-/* drifting warm light, the one colour cue carried from the reference */
+/* Barely-there warm light over true black — the field should read as
+   black first, with the crimson/amber only breathing at the edges. */
 .intro__glow {
   position: absolute; inset: -25%;
   background:
-    radial-gradient(ellipse 38% 46% at 24% 30%, rgba(255,45,85,0.50) 0%, transparent 68%),
-    radial-gradient(ellipse 34% 42% at 74% 62%, rgba(255,159,10,0.42) 0%, transparent 66%),
-    radial-gradient(ellipse 46% 30% at 52% 96%, rgba(255,214,10,0.20) 0%, transparent 70%);
-  filter: blur(46px);
+    radial-gradient(ellipse 30% 36% at 20% 24%, rgba(255,45,85,0.15) 0%, transparent 64%),
+    radial-gradient(ellipse 26% 32% at 78% 68%, rgba(255,159,10,0.11) 0%, transparent 62%),
+    radial-gradient(ellipse 40% 24% at 52% 100%, rgba(255,214,10,0.05) 0%, transparent 70%);
+  filter: blur(54px);
   animation: introDrift 14s ease-in-out infinite alternate;
 }
 @keyframes introDrift {
@@ -807,10 +808,35 @@ html.intro-up { overflow: hidden; }
 }
 @keyframes caretBlink { 0%,55% { opacity: 1; } 56%,100% { opacity: 0; } }
 
+/* the way down: appears once the phrase has finished typing */
+.intro__cta {
+  margin-top: 42px; display: flex; justify-content: center;
+  opacity: 0; transform: translateY(16px); pointer-events: none;
+  transition: opacity .8s var(--ease-out), transform .9s var(--ease-out);
+}
+.intro.is-ready .intro__cta { opacity: 1; transform: none; pointer-events: auto; }
+.intro__enter {
+  display: inline-flex; align-items: center; gap: 11px;
+  font-size: 15px; font-weight: 500; letter-spacing: .01em; color: #fff;
+  padding: 14px 28px; border-radius: var(--r-pill);
+  border: 1px solid rgba(255,255,255,0.26);
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  transition: background .25s var(--ease), border-color .25s var(--ease), transform .25s var(--ease);
+}
+.intro__enter:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.55); transform: translateY(-1px); }
+.intro__enter:active { transform: translateY(1px); }
+.intro__enter svg { width: 14px; height: 14px; animation: dip 1.9s ease-in-out infinite; }
+@keyframes dip { 0%,100% { transform: translateY(0); } 50% { transform: translateY(3px); } }
+
 .intro__bar {
   position: absolute; left: 0; right: 0; bottom: 0; height: 2px; z-index: 3;
   background: rgba(255,255,255,0.10);
+  transition: opacity .5s var(--ease);
 }
+.intro.is-ready .intro__bar,
+.intro.is-ready .intro__skip,
+.intro.is-ready .intro__hint { opacity: 0; pointer-events: none; }
 .intro__bar span {
   display: block; height: 100%; width: 0;
   background: linear-gradient(90deg, #ff2d55, #ff9f0a, #ffd60a);
@@ -822,13 +848,15 @@ html.intro-up { overflow: hidden; }
   color: rgba(255,255,255,0.55);
   border: 1px solid rgba(255,255,255,0.22);
   padding: 9px 16px; border-radius: var(--r-pill);
-  transition: color .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
+  transition: color .2s var(--ease), border-color .2s var(--ease),
+              background .2s var(--ease), opacity .5s var(--ease);
 }
 .intro__skip:hover { color: #fff; border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.07); }
 .intro__hint {
   position: absolute; left: 22px; bottom: 26px; z-index: 3;
   font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
   color: rgba(255,255,255,0.3);
+  transition: opacity .5s var(--ease);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -964,6 +992,15 @@ html.gated .gate { display: grid !important; }
   <div class="intro__center">
     <p class="intro__eyebrow" id="introEyebrow"></p>
     <div class="intro__line"><span id="introType"></span><span class="intro__caret"></span></div>
+    <div class="intro__cta">
+      <button class="intro__enter" id="introEnter">
+        <span id="introEnterLabel">Down to my portfolio</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 4v15M5.5 13.5 12 20l6.5-6.5"/>
+        </svg>
+      </button>
+    </div>
   </div>
   <span class="intro__hint">Click anywhere to skip</span>
   <button class="intro__skip" id="introSkip">Skip</button>
@@ -1212,7 +1249,8 @@ const SITE = {
   intro: {
     ms: 10000,
     eyebrow: 'EasySlice · Argil · Manus · Knowlify · Hustl',
-    phrases: ['loading your growth']
+    phrases: ['bringing your growth...'],
+    cta: 'Down to my portfolio'
   },
 
   heroEyebrow: 'Creative Director · UGC Programs',
@@ -2038,9 +2076,10 @@ const ACCOUNTS = [
     const phrases = (cfg.phrases && cfg.phrases.length) ? cfg.phrases : ['loading'];
 
     $('#introEyebrow').textContent = cfg.eyebrow || '';
+    if (cfg.cta) $('#introEnterLabel').textContent = cfg.cta;
     document.documentElement.classList.add('intro-up');
 
-    let finished = false;
+    let finished = false, readyShown = false;
     const timers = [];
     const wait = (fn, ms) => timers.push(setTimeout(fn, ms));
 
@@ -2054,7 +2093,19 @@ const ACCOUNTS = [
       done();
     }
 
-    /* skip: the button, a click anywhere on the field, Esc or Space */
+    /* The landing holds until the visitor comes down themselves: the typing
+       runs its course, then the button appears and waits. No auto-advance. */
+    function ready() {
+      if (finished || readyShown) return;
+      readyShown = true;
+      out.textContent = phrases[phrases.length - 1];
+      el.classList.add('is-ready');
+      const enter = $('#introEnter');
+      if (enter) enter.focus({ preventScroll: true });
+    }
+
+    /* early exits: the enter button, Skip, a click anywhere, Esc or Space */
+    $('#introEnter').addEventListener('click', finish);
     $('#introSkip').addEventListener('click', finish);
     el.addEventListener('click', finish);
     document.addEventListener('keydown', function onKey(e) {
@@ -2062,19 +2113,19 @@ const ACCOUNTS = [
       if (e.key === 'Escape' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); finish(); }
     });
 
-    if (REDUCED) {                       // no typing theatre, just show and go
+    if (REDUCED) {                       // no typing theatre — phrase and door
       out.textContent = phrases[phrases.length - 1];
       bar.style.width = '100%';
-      wait(finish, 700);
+      ready();
       return;
     }
 
     bar.style.transition = 'width ' + total + 'ms linear';
     requestAnimationFrame(() => { bar.style.width = '100%'; });
 
-    /* Type → hold → delete, looping until the last pass, which is left
-       standing so the reveal happens on the complete phrase. */
-    const TYPE = 78, DEL = 34, HOLD = 620;
+    /* Type → hold → delete, slow enough to watch happen. The last pass is
+       left standing, and the button rises under the finished phrase. */
+    const TYPE = 96, DEL = 40, HOLD = 750;
     let i = 0;
 
     function cycle() {
@@ -2085,7 +2136,7 @@ const ACCOUNTS = [
       const last = (total - elapsed()) < cost * 2;
       type(text, () => {
         if (finished) return;
-        if (last) { wait(finish, Math.max(300, total - elapsed())); return; }
+        if (last) { wait(ready, Math.max(300, total - elapsed())); return; }
         wait(() => erase(text, () => { i++; cycle(); }), HOLD);
       });
     }
@@ -2111,7 +2162,8 @@ const ACCOUNTS = [
     }
 
     cycle();
-    wait(finish, total);               // hard stop, whatever the typing is doing
+    wait(ready, total + 150);          // hard stop: whatever the typing is
+                                       // doing, the door opens at ten seconds
   }
 
   /* ═════ ACCESS GATE ═══════════════════════════════════════════ */
