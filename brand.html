@@ -886,23 +886,24 @@ html.intro-up { overflow: hidden; }
   text-align: center; font-size: 11px; letter-spacing: .22em; text-transform: uppercase;
   color: var(--text-3); margin-bottom: 34px;
 }
-/* A real scroller: swipe on touch, trackpad-native, drag with a mouse.
-   Page scroll still drifts it until the visitor takes hold themselves. */
+/* Live marquee viewport: the track glides via transform; grab it (mouse or
+   touch) to take over, hover to pause. Masked edges, no native scrollbar. */
 .partners__viewport {
-  overflow-x: auto;
-  scrollbar-width: none; -ms-overflow-style: none;
+  overflow: hidden;
   cursor: grab;
+  touch-action: pan-y;   /* horizontal gestures are ours; vertical scrolls the page */
   -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%);
           mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%);
 }
-.partners__viewport::-webkit-scrollbar { display: none; }
 .partners__viewport.is-dragging,
 .rail.is-dragging { cursor: grabbing; scroll-behavior: auto; }
 .rail.is-dragging * { pointer-events: none; }
 .partners__track {
-  display: flex; align-items: center; gap: clamp(46px, 7vw, 116px);
-  width: max-content; padding: 0 7vw;
+  display: flex; align-items: center; gap: var(--wm-gap);
+  width: max-content; will-change: transform;
 }
+.partners__set { display: flex; align-items: center; gap: var(--wm-gap); }
+.partners { --wm-gap: clamp(46px, 7vw, 116px); }
 /* Sized so five names always exceed the viewport — that overflow is what
    the scroll maps onto, and it's what lets each name appear exactly once. */
 .wordmark {
@@ -1107,8 +1108,8 @@ html.gated .gate { display: grid !important; }
   </section>
 
   <!-- ══ PARTNERS ══ -->
-  <section class="partners" id="partners" aria-label="Selected partners">
-    <p class="partners__label">Selected partners</p>
+  <section class="partners" id="partners" aria-label="Companies I've worked for">
+    <p class="partners__label">Companies I've worked for</p>
     <div class="partners__viewport">
       <div class="partners__track" id="partnerTrack"></div>
     </div>
@@ -1134,7 +1135,7 @@ html.gated .gate { display: grid !important; }
         <div class="sec-head reveal" style="margin-top:40px; margin-bottom:0">
           <p class="eyebrow">Work</p>
           <h2 class="h2">Selected work</h2>
-          <p class="sub">Top performers, not the full catalogue. Pick a partner to see theirs — every card opens on Instagram.</p>
+          <p class="sub">Top performers, not the full catalogue. Pick a partner to see theirs. Every card opens on Instagram.</p>
           <p class="count count--inline" id="countInline" aria-hidden="true"></p>
         </div>
 
@@ -1208,7 +1209,7 @@ html.gated .gate { display: grid !important; }
   <div class="wrap wrap--wide foot__in">
     <span id="footCopy"></span>
     <a href="#top">Back to top</a>
-    <span class="foot__note">Unlisted &amp; not indexed — please don't share this link.</span>
+    <span class="foot__note">Unlisted and not indexed.</span>
   </div>
 </footer>
 
@@ -1307,11 +1308,11 @@ const SITE = {
   about: {
     title: 'I rebuild how startups make content, then prove it in the numbers.',
     paragraphs: [
-      'Started making content with my first startup, Hustl — and it blew up.',
+      'Started making content with my first startup, Hustl, and it blew up.',
       'Went hands-on making UGC for Argil and restructured the UGC program. Now I direct programs and coach in-house teams at AI companies like EasySlice, Argil, and Manus.'
     ],
-    facts: []
-    // portraitSrc: 'assets/me.jpg'   ← drop in a photo and uncomment
+    facts: [],
+    portraitSrc: 'assets/aryan.jpg'
   },
 
   contact: {
@@ -1329,7 +1330,7 @@ const SITE = {
       body: 'Come in, audit what is being made and why, and rebuild the program around formats that actually earn attention.',
       bullets: ['Program audit', 'Format architecture', 'Creator briefs & pipeline'] },
     { icon: 'video', title: 'Creative direction',
-      body: 'Direction on every asset — hook, structure, and edit — so a batch reads as one deliberate body of work.',
+      body: 'Direction on every asset: hook, structure, and edit, so a batch reads as one deliberate body of work.',
       bullets: ['Concept & hooks', 'Shot direction', 'Edit supervision'] },
     { icon: 'handshake', title: 'Coaching in-house teams',
       body: 'For teams who want to own it themselves. I build the format with you and coach the people who will keep running it.',
@@ -1373,7 +1374,7 @@ const BRANDS = [
   { id: 'manus', name: 'Manus', mark: 'MA', category: 'Coaching & format design', year: '', color: '#30D158',
     wordmark: 'Manus', badge: { label: 'META', bg: '#0866ff', title: 'Acquired by Meta' },
     role: 'Coaching · Format design',
-    summary: 'Coached the team and helped build the format this post runs on — Manus has since been acquired by Meta.',
+    summary: 'Coached the team and helped build the format this post runs on. Manus has since been acquired by Meta.',
     highlights: [{ v: 'Meta', l: 'Acquired by' }],
     did: ['Coaching', 'Helped build the format'],
     result: [] },
@@ -1381,7 +1382,7 @@ const BRANDS = [
   { id: 'knowlify', name: 'Knowlify', mark: 'KN', category: 'Partner', year: '', color: '#FFD60A',
     wordmark: 'Knowlify', badge: { label: 'YC', bg: '#ff6600', title: 'Backed by Y Combinator' },
     role: 'Creative Director',
-    summary: 'TODO — one line on the engagement. Send me the reels and they drop straight in.',
+    summary: 'Selected work with Knowlify is going up shortly.',
     highlights: [],
     did: [],
     result: [] },
@@ -1389,9 +1390,9 @@ const BRANDS = [
   { id: 'hustl', name: 'Hustl', mark: 'HU', category: 'First UGC project', year: '', color: '#FF453A',
     wordmark: 'Hustl',
     role: 'UGC creator',
-    summary: 'The first startup I made UGC for — where the whole thing started.',
+    summary: 'The first startup I made UGC for, where the whole thing started.',
     highlights: [],
-    did: ['UGC creation — my first project'],
+    did: ['UGC creation, my first project'],
     result: [] }
 ];
 
@@ -1600,7 +1601,11 @@ const ACCOUNTS = [
       '<div class="fact"><dt>' + esc(f.k) + '</dt><dd>' + esc(f.v) + '</dd></div>').join('');
     $('#facts').hidden = facts.length === 0;
     if (SITE.about.portraitSrc) {
-      $('#portrait').innerHTML = '<img src="' + esc(SITE.about.portraitSrc) + '" alt="' + esc(SITE.name) + '">';
+      // if the file isn't committed yet the initials tile quietly stays
+      $('#portrait').insertAdjacentHTML('afterbegin',
+        '<img src="' + esc(SITE.about.portraitSrc) + '" alt="' + esc(SITE.name) +
+        '" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" ' +
+        'onerror="this.remove()">');
     }
 
     /* services */
@@ -1660,14 +1665,21 @@ const ACCOUNTS = [
     }, true);
   }
 
-  /* Each partner appears exactly once — no tiled repeats. The row is a real
-     scroller (swipe, trackpad, drag), and page scroll drifts it left to
-     right until the visitor takes hold, at which point it's theirs. */
-  let partnersTouched = false, partnersAuto = false;
+  /* Live marquee: the row glides left-to-right on its own, in real time.
+     A seamless loop needs the set repeated in the DOM — that's the wrap —
+     but the wordmarks are large enough that only ~3 fit a screen, so no
+     name ever reads twice at once. Hovering pauses it; grabbing (mouse or
+     touch) takes it over; it resumes a beat after letting go. */
+  const Partners = {
+    offset: 0, period: 1, raf: 0, last: 0,
+    speed: 44,                 // px per second, rightward
+    hovered: false, dragging: false, resumeT: 0, wired: false
+  };
+  const pmod = v => ((v % Partners.period) + Partners.period) % Partners.period;
 
   function buildPartners() {
-    const track = $('#partnerTrack');
-    track.innerHTML = BRANDS.map(b =>
+    const view = $('.partners__viewport'), track = $('#partnerTrack');
+    const set = '<div class="partners__set">' + BRANDS.map(b =>
       '<button class="wordmark" data-brand="' + b.id + '">' +
       '<span class="wordmark__dot" style="background:' + (b.dotGrad || b.color) + '"></span>' +
       esc(b.wordmark || b.name) +
@@ -1681,35 +1693,87 @@ const ACCOUNTS = [
           (b.badge.title ? ' title="' + esc(b.badge.title) + '"' : '') + '>' +
           esc(b.badge.label) + '</span>'
         : '') +
-      '</button>').join('');
+      '</button>').join('') + '</div>';
 
-    const view = $('.partners__viewport');
-    makePannable(view, () => { partnersTouched = true; });
-    view.addEventListener('wheel', e => {
-      // sideways wheel/trackpad intent hands the row over; vertical passes through
-      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) partnersTouched = true;
-    }, { passive: true });
-    view.addEventListener('scroll', () => {
-      if (!partnersAuto) partnersTouched = true;
-    }, { passive: true });
+    track.innerHTML = set;
+    const setW = track.firstElementChild.getBoundingClientRect().width;
+    const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+    Partners.period = setW + gap;
+    const reps = Math.max(2, Math.ceil((view.clientWidth + setW) / Partners.period) + 1);
+    track.innerHTML = new Array(reps).fill(set).join('');
+    applyPartners();
 
-    driftPartners();
+    if (!Partners.wired) { Partners.wired = true; wirePartners(view); }
+    startPartnersLoop();
   }
 
-  function driftPartners() {
-    if (partnersTouched) return;         // the visitor owns it now
-    const sec = $('#partners'), view = $('.partners__viewport'), track = $('#partnerTrack');
-    if (!sec || !view || !track) return;
-    const overflow = Math.max(0, track.scrollWidth - view.clientWidth);
-    if (!overflow) return;
+  function applyPartners() {
+    $('#partnerTrack').style.transform =
+      'translate3d(' + (Partners.offset - Partners.period).toFixed(2) + 'px,0,0)';
+  }
 
-    const r = sec.getBoundingClientRect();
-    const span = window.innerHeight + r.height;
-    // 0 when the section is just below the fold, 1 once it has passed above
-    const p = Math.min(1, Math.max(0, (window.innerHeight - r.top) / span));
-    partnersAuto = true;
-    view.scrollLeft = overflow * (1 - p);
-    requestAnimationFrame(() => { partnersAuto = false; });
+  function startPartnersLoop() {
+    if (Partners.raf || REDUCED) return;    // reduced motion: still, but draggable
+    Partners.last = performance.now();
+    (function tick(now) {
+      const dt = Math.min(0.1, (now - Partners.last) / 1000);
+      Partners.last = now;
+      const resting = !Partners.hovered && !Partners.dragging &&
+                      now >= Partners.resumeT;
+      if (resting && dt > 0) {
+        Partners.offset = pmod(Partners.offset + Partners.speed * dt);
+        applyPartners();
+      }
+      Partners.raf = requestAnimationFrame(tick);
+    })(performance.now());
+  }
+
+  function wirePartners(view) {
+    let down = false, moved = false, startX = 0, startO = 0;
+
+    view.addEventListener('pointerenter', e => {
+      if (e.pointerType === 'mouse') Partners.hovered = true;
+    });
+    view.addEventListener('pointerleave', e => {
+      if (e.pointerType === 'mouse') Partners.hovered = false;
+    });
+
+    view.addEventListener('pointerdown', e => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      down = true; moved = false;
+      startX = e.clientX; startO = Partners.offset;
+    });
+    view.addEventListener('pointermove', e => {
+      if (!down) return;
+      const dx = e.clientX - startX;
+      if (!moved && Math.abs(dx) > 6) {
+        moved = true;
+        Partners.dragging = true;
+        view.classList.add('is-dragging');
+        view.setPointerCapture(e.pointerId);
+      }
+      if (moved) { Partners.offset = pmod(startO + dx); applyPartners(); }
+    });
+    const end = () => {
+      if (!down) return;
+      down = false;
+      Partners.dragging = false;
+      Partners.resumeT = performance.now() + 2200;   // a beat before it glides again
+      view.classList.remove('is-dragging');
+      setTimeout(() => { moved = false; }, 0);       // outlive the click that follows
+    };
+    view.addEventListener('pointerup', end);
+    view.addEventListener('pointercancel', end);
+    view.addEventListener('click', e => {
+      if (moved) { e.stopPropagation(); e.preventDefault(); }
+    }, true);
+
+    view.addEventListener('wheel', e => {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;   // vertical → page
+      Partners.offset = pmod(Partners.offset - e.deltaX);
+      Partners.resumeT = performance.now() + 2200;
+      applyPartners();
+    }, { passive: true });
   }
 
   /* ═════ RENDER: filter controls ═══════════════════════════════ */
@@ -2449,7 +2513,6 @@ const ACCOUNTS = [
     apply();
     spy();
     paintThemeIcon();
-    driftPartners();
 
     /* Render first, then play the intro over a finished page, and hold the
        scroll reveals back so the hero animates in as the intro clears. */
@@ -2465,18 +2528,11 @@ const ACCOUNTS = [
   document.documentElement.setAttribute('data-theme', savedTheme || 'dark');
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', paintThemeIcon);
 
-  /* partner row is scroll-driven; recompute on scroll and on resize */
-  let ticking = false;
-  window.addEventListener('scroll', () => {
-    if (ticking || !booted) return;
-    ticking = true;
-    requestAnimationFrame(() => { driftPartners(); ticking = false; });
-  }, { passive: true });
-
+  /* marquee geometry depends on viewport width; rebuild after resizes */
   let rzT;
   window.addEventListener('resize', () => {
     clearTimeout(rzT);
-    rzT = setTimeout(() => { if (booted) driftPartners(); }, 180);
+    rzT = setTimeout(() => { if (booted) buildPartners(); }, 180);
   });
 
   if (gate()) boot();
