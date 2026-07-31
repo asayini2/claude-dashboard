@@ -6,9 +6,8 @@
 <meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
 <meta name="referrer" content="no-referrer">
 <meta name="description" content="Private portfolio.">
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-<title>Private Portfolio</title>
+<meta name="theme-color" content="#000000">
+<title>Aryan Sayini's Portfolio</title>
 
 <style>
 /* ═══════════════════════════════════════════════════════════════
@@ -323,12 +322,15 @@ section[id], div[id], span[id] { scroll-margin-top: calc(var(--nav-h) + 8px); }
   letter-spacing: -0.01em; margin-bottom: 14px;
 }
 .hero h1 {
-  font-size: clamp(40px, 7.6vw, 76px);
-  line-height: 1.05;
+  font-size: clamp(20px, 5.7vw, 72px);
+  line-height: 1.08;
   font-weight: 600;
   letter-spacing: -0.015em;
-  max-width: 16ch; margin: 0 auto;
+  margin: 0 auto;
 }
+/* each sentence owns a line; the clamp is sized so the longest line
+   fits a 360px viewport without ever wrapping mid-sentence */
+.hero h1 .line { display: block; white-space: nowrap; }
 .hero__sub {
   font-size: clamp(17px, 2.2vw, 21px); line-height: 1.4; color: var(--text-2);
   letter-spacing: 0.011em; max-width: 40ch; margin: 20px auto 0;
@@ -882,14 +884,22 @@ html.intro-up { overflow: hidden; }
   text-align: center; font-size: 11px; letter-spacing: .22em; text-transform: uppercase;
   color: var(--text-3); margin-bottom: 34px;
 }
+/* A real scroller: swipe on touch, trackpad-native, drag with a mouse.
+   Page scroll still drifts it until the visitor takes hold themselves. */
 .partners__viewport {
+  overflow-x: auto;
+  scrollbar-width: none; -ms-overflow-style: none;
+  cursor: grab;
   -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%);
           mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%);
 }
+.partners__viewport::-webkit-scrollbar { display: none; }
+.partners__viewport.is-dragging,
+.rail.is-dragging { cursor: grabbing; scroll-behavior: auto; }
+.rail.is-dragging * { pointer-events: none; }
 .partners__track {
   display: flex; align-items: center; gap: clamp(46px, 7vw, 116px);
   width: max-content; padding: 0 7vw;
-  will-change: transform;
 }
 /* Sized so five names always exceed the viewport — that overflow is what
    the scroll maps onto, and it's what lets each name appear exactly once. */
@@ -1257,7 +1267,8 @@ const SITE = {
   initials: 'AS',
   role: 'Creative Director · UGC',
   location: '',                            // ← optional, e.g. 'New York, NY'
-  email: 'aayushiyer06@gmail.com',         // ← swap for a business address if you have one
+  email: 'aryansayini.business@gmail.com',
+  pageTitle: "Aryan Sayini's Portfolio",
 
   /* Intro loader. `phrases` are typed then deleted in a loop for
      `introMs`; the last one is left standing before the page reveals. */
@@ -1277,7 +1288,8 @@ const SITE = {
   autoInstagramThumbs: true,
 
   heroEyebrow: 'Growth · GTM · Startups',
-  heroTitle: "Building an audience is easy. Reaching your buyer isn't.",
+  /* each entry is one full line — sentences never wrap mid-thought */
+  heroTitleLines: ['Building an audience is easy.', "Reaching your buyer isn't."],
   heroSub: 'I handle Growth and GTM for startups. I build content into an acquisition channel, not an audience.',
   secondaryCta: { label: 'Get in touch', href: '#contact' },
 
@@ -1293,15 +1305,10 @@ const SITE = {
   about: {
     title: 'I rebuild how startups make content, then prove it in the numbers.',
     paragraphs: [
-      'TODO — a few sentences on how you got into UGC, what "restructuring a program" actually means in your hands, and the kind of company you do your best work with.',
-      'TODO — the arc: started hands-on making UGC for Hustl, now directing programs and coaching in-house teams at AI companies like Soren, Argil, and Manus.'
+      'Started making content with my first startup, Hustl — and it blew up.',
+      'Went hands-on making UGC for Argil and restructured the UGC program. Now I direct programs and coach in-house teams at AI companies like EasySlice, Argil, and Manus.'
     ],
-    facts: [
-      { k: 'Role',      v: 'Creative Director' },
-      { k: 'Focus',     v: 'UGC programs, short-form' },
-      { k: 'Partners',  v: 'Soren, Argil, Manus, Hustl' },
-      { k: 'Available', v: 'TODO' }
-    ]
+    facts: []
     // portraitSrc: 'assets/me.jpg'   ← drop in a photo and uncomment
   },
 
@@ -1559,12 +1566,19 @@ const ACCOUNTS = [
 
   /* ═════ RENDER: static chrome ═════════════════════════════════ */
   function renderChrome() {
-    document.title = SITE.name + ' — Private Portfolio';
+    document.title = SITE.pageTitle || (SITE.name + ' — Portfolio');
     $('#navName').textContent = SITE.name;
     $('#navMark').textContent = SITE.initials;
     $('#portraitInitials').textContent = SITE.initials;
     $('#heroEyebrow').textContent = SITE.heroEyebrow;
-    $('#heroTitle').textContent = SITE.heroTitle;
+    const ht = $('#heroTitle');
+    if (SITE.heroTitleLines && SITE.heroTitleLines.length) {
+      // one .line per sentence — each holds a full line, never wrapping mid-thought
+      ht.innerHTML = SITE.heroTitleLines.map(l =>
+        '<span class="line">' + esc(l) + '</span>').join('');
+    } else {
+      ht.textContent = SITE.heroTitle || '';
+    }
     $('#heroSub').textContent = SITE.heroSub;
 
     const sec = $('#heroSecondary');
@@ -1579,8 +1593,10 @@ const ACCOUNTS = [
     /* about */
     $('#aboutTitle').textContent = SITE.about.title;
     $('#aboutBody').innerHTML = SITE.about.paragraphs.map(p => '<p>' + esc(p) + '</p>').join('');
-    $('#facts').innerHTML = SITE.about.facts.map(f =>
+    const facts = SITE.about.facts || [];
+    $('#facts').innerHTML = facts.map(f =>
       '<div class="fact"><dt>' + esc(f.k) + '</dt><dd>' + esc(f.v) + '</dd></div>').join('');
+    $('#facts').hidden = facts.length === 0;
     if (SITE.about.portraitSrc) {
       $('#portrait').innerHTML = '<img src="' + esc(SITE.about.portraitSrc) + '" alt="' + esc(SITE.name) + '">';
     }
@@ -1608,9 +1624,45 @@ const ACCOUNTS = [
     buildPartners();
   }
 
-  /* Each partner appears exactly once — no tiled repeats. The row is wider
-     than the viewport, and scroll position drives it left to right, so the
-     movement is continuous without ever showing the same name twice. */
+  /* Drag-to-pan for the horizontal rows. Touch and trackpads scroll them
+     natively; this gives plain mice the same reach. A drag past 6px
+     suppresses the click underneath, so grabbing never triggers a chip. */
+  function makePannable(view, onGrab) {
+    let down = false, moved = false, startX = 0, startL = 0;
+    view.addEventListener('pointerdown', e => {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      down = true; moved = false;
+      startX = e.clientX; startL = view.scrollLeft;
+    });
+    view.addEventListener('pointermove', e => {
+      if (!down) return;
+      const dx = e.clientX - startX;
+      if (!moved && Math.abs(dx) > 6) {
+        moved = true;
+        view.classList.add('is-dragging');
+        view.setPointerCapture(e.pointerId);
+        if (onGrab) onGrab();
+      }
+      if (moved) view.scrollLeft = startL - dx;
+    });
+    const end = () => {
+      if (!down) return;
+      down = false;
+      view.classList.remove('is-dragging');
+      setTimeout(() => { moved = false; }, 0);   // outlive the click that follows pointerup
+    };
+    view.addEventListener('pointerup', end);
+    view.addEventListener('pointercancel', end);
+    view.addEventListener('click', e => {
+      if (moved) { e.stopPropagation(); e.preventDefault(); }
+    }, true);
+  }
+
+  /* Each partner appears exactly once — no tiled repeats. The row is a real
+     scroller (swipe, trackpad, drag), and page scroll drifts it left to
+     right until the visitor takes hold, at which point it's theirs. */
+  let partnersTouched = false, partnersAuto = false;
+
   function buildPartners() {
     const track = $('#partnerTrack');
     track.innerHTML = BRANDS.map(b =>
@@ -1624,20 +1676,34 @@ const ACCOUNTS = [
         : '') +
       (b.yc ? '<span class="wordmark__yc">YC</span>' : '') +
       '</button>').join('');
+
+    const view = $('.partners__viewport');
+    makePannable(view, () => { partnersTouched = true; });
+    view.addEventListener('wheel', e => {
+      // sideways wheel/trackpad intent hands the row over; vertical passes through
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) partnersTouched = true;
+    }, { passive: true });
+    view.addEventListener('scroll', () => {
+      if (!partnersAuto) partnersTouched = true;
+    }, { passive: true });
+
     driftPartners();
   }
 
   function driftPartners() {
-    const sec = $('#partners'), track = $('#partnerTrack');
-    if (!sec || !track) return;
-    const overflow = Math.max(0, track.scrollWidth - sec.clientWidth);
-    if (!overflow) { track.style.transform = 'none'; return; }
+    if (partnersTouched) return;         // the visitor owns it now
+    const sec = $('#partners'), view = $('.partners__viewport'), track = $('#partnerTrack');
+    if (!sec || !view || !track) return;
+    const overflow = Math.max(0, track.scrollWidth - view.clientWidth);
+    if (!overflow) return;
 
     const r = sec.getBoundingClientRect();
     const span = window.innerHeight + r.height;
     // 0 when the section is just below the fold, 1 once it has passed above
     const p = Math.min(1, Math.max(0, (window.innerHeight - r.top) / span));
-    track.style.transform = 'translate3d(' + (-overflow * (1 - p)).toFixed(1) + 'px,0,0)';
+    partnersAuto = true;
+    view.scrollLeft = overflow * (1 - p);
+    requestAnimationFrame(() => { partnersAuto = false; });
   }
 
   /* ═════ RENDER: filter controls ═══════════════════════════════ */
@@ -1661,6 +1727,7 @@ const ACCOUNTS = [
       .map(l => '<button data-lane="' + l.id + '" aria-pressed="' + (l.id === state.lane) + '">' +
         l.label + '</button>').join('');
 
+    makePannable(rail);
     rail.addEventListener('click', e => {
       const chip = e.target.closest('.chip');
       if (!chip) return;
@@ -2265,30 +2332,13 @@ const ACCOUNTS = [
       if (e.key === 'Escape' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); finish(); }
     });
 
-    if (REDUCED) {                       // no typing theatre — phrase and door
-      out.textContent = phrases[phrases.length - 1];
-      bar.style.width = '100%';
-      ready();
-      return;
-    }
-
-    /* entrance choreography: 50ms between siblings, 100ms between groups.
-       Chrome opacity is JS-held during the springs (transition: none) so
-       the CSS fade rules can't fight the per-frame values. */
-    centerEls.forEach((n, ix) =>
-      Motion.animate(n, { y: [18, 0], opacity: [0, 1] }, 'entrance', { delay: ix * 50 }));
-    chromeEls.forEach((n, ix) => {
-      n.style.transition = 'none';
-      Motion.animate(n, { opacity: [0, 1] }, 'entrance', { delay: 150 + ix * 50 });
-    });
-
-    bar.style.transition = 'width ' + total + 'ms linear';
-    requestAnimationFrame(() => { bar.style.width = '100%'; });
-
     /* Type → hold → delete, slow enough to watch happen. The last pass is
-       left standing, and the button rises under the finished phrase. */
+       left standing, and the button rises under the finished phrase.
+       The typewriter runs for reduced-motion visitors too — character
+       changes aren't spatial motion; the springs are what snap for them. */
     const TYPE = 96, DEL = 40, HOLD = 750;
-    let i = 0;
+    let i = 0, t0 = 0;
+    const elapsed = () => performance.now() - t0;
 
     function cycle() {
       if (finished) return;
@@ -2302,9 +2352,6 @@ const ACCOUNTS = [
         wait(() => erase(text, () => { i++; cycle(); }), HOLD);
       });
     }
-
-    const t0 = performance.now();
-    const elapsed = () => performance.now() - t0;
 
     function type(text, cb) {
       let n = 0;
@@ -2323,10 +2370,41 @@ const ACCOUNTS = [
       })();
     }
 
-    wait(cycle, 280);                  // let the line spring in before the
+    function begin() {
+      if (finished || t0) return;
+      t0 = performance.now();
+
+      /* entrance choreography: 50ms between siblings, 100ms between groups.
+         Chrome opacity is JS-held during the springs (transition: none) so
+         the CSS fade rules can't fight the per-frame values. Under reduced
+         motion every spring snaps to its final frame. */
+      centerEls.forEach((n, ix) =>
+        Motion.animate(n, { y: [18, 0], opacity: [0, 1] }, 'entrance', { delay: ix * 50 }));
+      chromeEls.forEach((n, ix) => {
+        n.style.transition = 'none';
+        Motion.animate(n, { opacity: [0, 1] }, 'entrance', { delay: 150 + ix * 50 });
+      });
+
+      bar.style.transition = 'width ' + total + 'ms linear';
+      requestAnimationFrame(() => { bar.style.width = '100%'; });
+
+      wait(cycle, 280);                // let the line spring in before the
                                        // first character lands
-    wait(ready, total + 150);          // hard stop: whatever the typing is
+      wait(ready, total + 150);        // hard stop: whatever the typing is
                                        // doing, the door opens at ten seconds
+    }
+
+    /* Don't run the show to an empty theatre: a tab opened in the
+       background holds the sequence until it's actually being watched. */
+    if (document.hidden) {
+      document.addEventListener('visibilitychange', function onVis() {
+        if (document.hidden) return;
+        document.removeEventListener('visibilitychange', onVis);
+        begin();
+      });
+    } else {
+      begin();
+    }
   }
 
   /* ═════ ACCESS GATE ═══════════════════════════════════════════ */
@@ -2374,11 +2452,11 @@ const ACCOUNTS = [
     else { $('#intro').hidden = true; reveal(); }
   }
 
-  /* stored theme, applied before first paint of the body content */
-  try {
-    const saved = localStorage.getItem('brand-theme');
-    if (saved) document.documentElement.setAttribute('data-theme', saved);
-  } catch (e) {}
+  /* Dark is the house default — the page continues the loader's black.
+     A saved manual choice (the sun/moon toggle) still wins. */
+  let savedTheme = null;
+  try { savedTheme = localStorage.getItem('brand-theme'); } catch (e) {}
+  document.documentElement.setAttribute('data-theme', savedTheme || 'dark');
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', paintThemeIcon);
 
   /* partner row is scroll-driven; recompute on scroll and on resize */
