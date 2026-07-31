@@ -436,7 +436,8 @@ section[id], div[id], span[id] { scroll-margin-top: calc(var(--nav-h) + 8px); }
   padding: 12px 22px 0; max-width: var(--wrap-wide); margin: 0 auto;
 }
 .seg {
-  display: inline-flex; padding: 2px; gap: 2px;
+  display: inline-flex; flex-wrap: wrap; padding: 2px; gap: 2px;
+  max-width: 100%;
   background: var(--fill); border-radius: var(--r-sm);
 }
 .seg button {
@@ -1308,8 +1309,8 @@ const SITE = {
   about: {
     title: 'I build personal brands for startups, then prove them in the numbers.',
     paragraphs: [
-      'Started making content with my first startup, Hustl, and it blew up.',
-      'I have handled social media for EasySlice and Hustl, and I run creator programs at Manus, Argil, and Knowlify, making the brand videos myself.',
+      'Started with founder led marketing for my own startup, Hustl, and it blew up.',
+      'I handle social media for EasySlice, and I run creator programs at Manus, Argil, and Knowlify, making the brand videos myself.',
       'Creating and teaching go hand in hand. I build the system, prove it on camera, then coach the team to run it.',
       'I also host builder nights, hackathons, and networking mixers that have brought in over 1000 people, with partners like Google, NVIDIA, Base44, Lovable, Pieces, WorkOS and more.'
     ],
@@ -1391,10 +1392,10 @@ const BRANDS = [
 
   { id: 'hustl', name: 'Hustl', mark: 'HU', category: 'First UGC project', year: '', color: '#FF453A',
     wordmark: 'Hustl',
-    role: 'Social Media',
-    summary: 'My previous startup. I ran its social media and made the videos, and it blew up.',
+    role: 'Founder Led Marketing',
+    summary: 'My own startup. I grew it with founder led marketing, and it blew up.',
     highlights: [],
-    did: ['Ran social media', 'Made the videos'],
+    did: ['Founder led marketing for my own startup', 'Made the videos myself'],
     result: [] }
 ];
 
@@ -1443,11 +1444,11 @@ const WORK = [
     href: 'https://www.instagram.com/p/DWyxm0xDmJX/' },
 
   /* ── Hustl ── */
-  { id: 'hu1', brand: 'hustl', contribution: 'social', platform: 'instagram', tall: true,
+  { id: 'hu1', brand: 'hustl', contribution: 'founder', platform: 'instagram', tall: true,
     title: 'Reel 01', href: 'https://www.instagram.com/reel/DNKDJgYNwjP/' },
-  { id: 'hu2', brand: 'hustl', contribution: 'social', platform: 'instagram', tall: true,
+  { id: 'hu2', brand: 'hustl', contribution: 'founder', platform: 'instagram', tall: true,
     title: 'Reel 02', href: 'https://www.instagram.com/reel/DM8RVj6J1aI/' },
-  { id: 'hu3', brand: 'hustl', contribution: 'social', platform: 'instagram', tall: true,
+  { id: 'hu3', brand: 'hustl', contribution: 'founder', platform: 'instagram', tall: true,
     title: 'Reel 03', href: 'https://www.instagram.com/reel/DNNwQd8tl1h/' }
 ];
 
@@ -1465,13 +1466,13 @@ const WORK = [
    ---------------------------------------------------------------- */
 const ACCOUNTS = [
   { id: 'ac-easyslice', brand: 'easyslice', handle: '', platform: 'instagram',
-    window: '2 months', note: 'Creative direction',
+    window: '2 months', note: 'Social media',
     from: 0, to: 50000,
     series: [],                                    // ← add monthly numbers for a curve
     href: '' },                                    // ← TODO: the @ / profile URL
 
   { id: 'ac-hustl', brand: 'hustl', handle: '@joinhustl', platform: 'instagram',
-    window: '', note: 'UGC',
+    window: '', note: 'Founder led',
     from: null, to: null,                          // ← add numbers if you have them
     series: [],
     href: 'https://www.instagram.com/joinhustl/reels/' }
@@ -1564,6 +1565,7 @@ const ACCOUNTS = [
      everything here is short-form, so format would filter nothing. */
   const LANES = [
     { id: 'all',      label: 'All' },
+    { id: 'founder',  label: 'Founder led' },
     { id: 'social',   label: 'Social media' },
     { id: 'program',  label: 'Creator programs' },
     { id: 'coaching', label: 'Coaching' }
