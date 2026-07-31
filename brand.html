@@ -484,10 +484,30 @@ section[id], div[id], span[id] { scroll-margin-top: calc(var(--nav-h) + 8px); }
 /* ═══════════════════════════════════════════════════════════════
    7 — WORK GRID
    ═══════════════════════════════════════════════════════════════ */
-.grid {
-  display: grid; gap: 22px; margin-top: 34px; align-items: start;
-  grid-template-columns: repeat(auto-fill, minmax(292px, 1fr));
+.carnav { display: flex; gap: 10px; justify-content: flex-end; margin-top: 26px; }
+.car-btn {
+  width: 42px; height: 42px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--fill); color: var(--text);
+  transition: background .2s var(--e-standard), opacity .2s var(--e-standard), transform .2s var(--e-standard);
 }
+.car-btn:hover { background: var(--fill-hi); }
+.car-btn:active { transform: scale(.94); }
+.car-btn[disabled] { opacity: .3; pointer-events: none; }
+.car-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* One row you flip through instead of three screens you scroll past.
+   Snap points per card; swipe on touch, drag with a mouse, arrows above. */
+.grid {
+  display: flex; gap: 18px; align-items: stretch;
+  margin-top: 16px; padding: 4px 4px 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory; scroll-behavior: smooth;
+  scrollbar-width: none; -ms-overflow-style: none;
+}
+.grid::-webkit-scrollbar { display: none; }
+.grid.is-dragging { cursor: grabbing; scroll-behavior: auto; }
+.grid .card { flex: 0 0 clamp(230px, 24vw, 300px); scroll-snap-align: start; }
 .card {
   position: relative; text-align: left; width: 100%;
   /* flex column, or the <button> vertically centres its content in the grid track */
@@ -1140,6 +1160,15 @@ html.gated .gate { display: grid !important; }
           <p class="count count--inline" id="countInline" aria-hidden="true"></p>
         </div>
 
+        <div class="carnav">
+          <button class="car-btn" id="carPrev" aria-label="Previous videos">
+            <svg viewBox="0 0 24 24"><path d="M14.5 6 8.5 12l6 6"/></svg>
+          </button>
+          <button class="car-btn" id="carNext" aria-label="Next videos">
+            <svg viewBox="0 0 24 24"><path d="M9.5 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+
         <div class="grid" id="workGrid"></div>
         <div class="empty" id="workEmpty" hidden>
           <h4 id="emptyTitle">Nothing here yet</h4>
@@ -1532,13 +1561,21 @@ const ACCOUNTS = [
     const m = /instagram\.com\/(?:reel|p)\/([A-Za-z0-9_-]+)/.exec(href || '');
     return m ? 'https://www.instagram.com/p/' + m[1] + '/media/?size=l' : null;
   }
+  /* Layered attempts, best on top: a committed screenshot at
+     assets/thumbs/<id>.jpg always wins; Instagram's own frame shows when
+     Instagram allows it; the branded tile is the floor. Failed layers
+     remove themselves, so nothing ever looks broken. */
   function autoThumb(w) {
-    if (w.thumb || !SITE.autoInstagramThumbs) return '';
-    const src = igMedia(w.href);
-    return src
-      ? '<img class="thumb__auto" src="' + esc(src) + '" alt="" loading="lazy" ' +
-        'referrerpolicy="no-referrer" onerror="this.remove()">'
-      : '';
+    if (w.thumb) return '';
+    let out = '';
+    if (SITE.autoInstagramThumbs) {
+      const ig = igMedia(w.href);
+      if (ig) out += '<img class="thumb__auto" src="' + esc(ig) + '" alt="" loading="lazy" ' +
+        'referrerpolicy="no-referrer" onerror="this.remove()">';
+    }
+    out += '<img class="thumb__auto" src="assets/thumbs/' + esc(w.id) + '.jpg" alt="" ' +
+      'loading="lazy" onerror="this.remove()">';
+    return out;
   }
 
   /* ── generated thumbnail (used when no image is supplied) ───── */
@@ -1958,6 +1995,16 @@ const ACCOUNTS = [
       const hit = e.target.closest('.card__hit');
       if (hit) openSheet(hit.dataset.id);
     });
+
+    /* carousel: mouse drag pans it, arrows page it, edges disable */
+    const car = $('#workGrid');
+    makePannable(car);
+    function carStep(dir) {
+      car.scrollBy({ left: dir * car.clientWidth * 0.85, behavior: REDUCED ? 'auto' : 'smooth' });
+    }
+    $('#carPrev').addEventListener('click', () => carStep(-1));
+    $('#carNext').addEventListener('click', () => carStep(1));
+    car.addEventListener('scroll', updateCarNav, { passive: true });
   }
 
   /* ═════ FILTERING ═════════════════════════════════════════════ */
@@ -2017,6 +2064,19 @@ const ACCOUNTS = [
     $('#countInline').innerHTML = label;
 
     renderSummary(workOn, acctOn);
+
+    /* filters change the row's width; rewind and re-judge the arrows */
+    const car = $('#workGrid');
+    if (car) { car.scrollTo({ left: 0 }); setTimeout(updateCarNav, 260); }
+  }
+
+  function updateCarNav() {
+    const car = $('#workGrid');
+    const max = car.scrollWidth - car.clientWidth;
+    $('#carPrev').disabled = car.scrollLeft < 8;
+    $('#carNext').disabled = car.scrollLeft > max - 8;
+    // no second page, no arrows
+    $('.carnav').style.display = max > 8 ? '' : 'none';
   }
 
   /* fade out → re-lay-out → stagger in */
