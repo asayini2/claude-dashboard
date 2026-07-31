@@ -64,6 +64,13 @@
 
   --ease: cubic-bezier(0.32, 0.08, 0.24, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Motion system (intro): springs drive transforms via JS; these tokens
+     govern the non-spring transitions. hover 200ms · exit 300ms. */
+  --d-hover: 200ms;
+  --d-exit: 300ms;
+  --e-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --e-exit: cubic-bezier(0.32, 0, 0.67, 0);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -745,13 +752,10 @@ section[id], div[id], span[id] { scroll-margin-top: calc(var(--nav-h) + 8px); }
   background: #000; color: #fff;
   display: grid; place-items: center;
   overflow: hidden;
-  transition: opacity .9s var(--ease), transform 1.1s var(--ease-out),
-              filter .9s var(--ease);
+  /* exit is spring-driven from JS (300ms class) — no CSS transition here,
+     and transform/opacity only: no blur, nothing that forces repaints */
 }
-.intro.is-done {
-  opacity: 0; pointer-events: none;
-  transform: scale(1.06); filter: blur(14px);
-}
+.intro.is-done { opacity: 0; pointer-events: none; }
 html.intro-up { overflow: hidden; }
 
 /* Barely-there warm light over true black — the field should read as
@@ -789,6 +793,9 @@ html.intro-up { overflow: hidden; }
 }
 
 .intro__center { position: relative; z-index: 2; text-align: center; padding: 0 24px; width: 100%; }
+/* the handful of elements the springs move — layer hints, transform-only */
+.intro__glow, .intro__grain { will-change: transform; }
+.intro__eyebrow, .intro__line, .intro__cta { will-change: transform, opacity; }
 .intro__eyebrow {
   font-size: 11px; font-weight: 600; letter-spacing: .28em; text-transform: uppercase;
   color: rgba(255,255,255,0.5); margin-bottom: 26px;
@@ -808,13 +815,14 @@ html.intro-up { overflow: hidden; }
 }
 @keyframes caretBlink { 0%,55% { opacity: 1; } 56%,100% { opacity: 0; } }
 
-/* the way down: appears once the phrase has finished typing */
+/* The way down: appears once the phrase has finished typing.
+   Arrival and hover scale are spring-driven from JS; CSS keeps only the
+   hidden initial state and the 200ms colour changes. */
 .intro__cta {
   margin-top: 42px; display: flex; justify-content: center;
-  opacity: 0; transform: translateY(16px); pointer-events: none;
-  transition: opacity .8s var(--ease-out), transform .9s var(--ease-out);
+  opacity: 0; transform: translateY(18px); pointer-events: none;
 }
-.intro.is-ready .intro__cta { opacity: 1; transform: none; pointer-events: auto; }
+.intro.is-ready .intro__cta { pointer-events: auto; }
 .intro__enter {
   display: inline-flex; align-items: center; gap: 11px;
   font-size: 15px; font-weight: 500; letter-spacing: .01em; color: #fff;
@@ -822,17 +830,17 @@ html.intro-up { overflow: hidden; }
   border: 1px solid rgba(255,255,255,0.26);
   background: rgba(255,255,255,0.05);
   backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  transition: background .25s var(--ease), border-color .25s var(--ease), transform .25s var(--ease);
+  transition: background var(--d-hover) var(--e-standard),
+              border-color var(--d-hover) var(--e-standard);
 }
-.intro__enter:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.55); transform: translateY(-1px); }
-.intro__enter:active { transform: translateY(1px); }
+.intro__enter:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.55); }
 .intro__enter svg { width: 14px; height: 14px; animation: dip 1.9s ease-in-out infinite; }
 @keyframes dip { 0%,100% { transform: translateY(0); } 50% { transform: translateY(3px); } }
 
 .intro__bar {
   position: absolute; left: 0; right: 0; bottom: 0; height: 2px; z-index: 3;
   background: rgba(255,255,255,0.10);
-  transition: opacity .5s var(--ease);
+  transition: opacity var(--d-exit) var(--e-exit);
 }
 .intro.is-ready .intro__bar,
 .intro.is-ready .intro__skip,
@@ -848,15 +856,17 @@ html.intro-up { overflow: hidden; }
   color: rgba(255,255,255,0.55);
   border: 1px solid rgba(255,255,255,0.22);
   padding: 9px 16px; border-radius: var(--r-pill);
-  transition: color .2s var(--ease), border-color .2s var(--ease),
-              background .2s var(--ease), opacity .5s var(--ease);
+  transition: color var(--d-hover) var(--e-standard),
+              border-color var(--d-hover) var(--e-standard),
+              background var(--d-hover) var(--e-standard),
+              opacity var(--d-exit) var(--e-exit);
 }
 .intro__skip:hover { color: #fff; border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.07); }
 .intro__hint {
   position: absolute; left: 22px; bottom: 26px; z-index: 3;
   font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
   color: rgba(255,255,255,0.3);
-  transition: opacity .5s var(--ease);
+  transition: opacity var(--d-exit) var(--e-exit);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -2066,6 +2076,91 @@ const ACCOUNTS = [
     });
   }
 
+  /* ═════ MOTION — spring physics for the first page ════════════
+     The site ships as one dependency-free file, so rather than load
+     React + Framer Motion for the landing, this is the same model
+     Framer uses — a damped harmonic oscillator, integrated per frame —
+     with parameters in the same vocabulary:
+
+       entrance  stiffness 170 · damping 24 · mass 1   (~400ms settle)
+       bouncy    stiffness 300 · damping 19 · mass 1   (button arrival)
+       hover     stiffness 550 · damping 32 · mass 1   (~200ms settle)
+       exit      stiffness 320 · damping 34 · mass 1   (~300ms, no bounce)
+
+     Non-spring transitions use --e-standard/--e-exit at --d-hover 200ms
+     and --d-exit 300ms. Staggers: 50ms siblings, 100ms between groups.
+     Only transform and opacity are ever animated; reduced-motion snaps
+     every spring straight to its final frame.                        */
+  const Motion = (() => {
+    const P = {
+      entrance: { stiffness: 170, damping: 24, mass: 1 },
+      bouncy:   { stiffness: 300, damping: 19, mass: 1 },
+      hover:    { stiffness: 550, damping: 32, mass: 1 },
+      exit:     { stiffness: 320, damping: 34, mass: 1 }
+    };
+    const live = new Set();
+    const clamp01 = v => Math.max(0, Math.min(1, v));
+
+    function apply(el, from, to, p) {
+      if (from.y !== undefined || from.scale !== undefined) {
+        const y = from.y === undefined ? 0 : from.y + (to.y - from.y) * p;
+        const s = from.scale === undefined ? 1 : from.scale + (to.scale - from.scale) * p;
+        el.style.transform = 'translate3d(0,' + y.toFixed(2) + 'px,0) scale(' + s.toFixed(4) + ')';
+      }
+      if (from.opacity !== undefined) {
+        el.style.opacity = clamp01(from.opacity + (to.opacity - from.opacity) * p);
+      }
+    }
+
+    function animate(el, props, preset, opts) {
+      opts = opts || {};
+      const from = {}, to = {};
+      Object.keys(props).forEach(k => { from[k] = props[k][0]; to[k] = props[k][1]; });
+
+      if (REDUCED) {
+        apply(el, from, to, 1);
+        if (opts.onDone) opts.onDone();
+        return { stop() {} };
+      }
+
+      apply(el, from, to, 0);            // hold the start pose through any delay
+      const k = P[preset] || P.entrance;
+      /* Fixed 120Hz substeps over wall-clock time, not one step per frame:
+         a throttled tab (background, busy main thread, cheap phone) drops
+         frames but the spring still lands on schedule instead of running
+         in slow motion. */
+      const H = 1 / 120;
+      let x = 0, v = 0, acc = 0, raf = 0, delayT = 0, last = 0;
+      const h = { stop() { cancelAnimationFrame(raf); clearTimeout(delayT); live.delete(h); } };
+
+      function frame(now) {
+        acc += Math.min((now - last) / 1000, 0.25);
+        last = now;
+        while (acc >= H) {
+          v += ((-k.stiffness * (x - 1) - k.damping * v) / k.mass) * H;
+          x += v * H;
+          acc -= H;
+        }
+        if (Math.abs(x - 1) < 0.001 && Math.abs(v) < 0.01) {
+          apply(el, from, to, 1);
+          live.delete(h);
+          if (opts.onUpdate) opts.onUpdate(1);
+          if (opts.onDone) opts.onDone();
+          return;
+        }
+        apply(el, from, to, x);
+        if (opts.onUpdate) opts.onUpdate(x);
+        raf = requestAnimationFrame(frame);
+      }
+      const start = () => { last = performance.now(); raf = requestAnimationFrame(frame); };
+      if (opts.delay) delayT = setTimeout(start, opts.delay); else start();
+      live.add(h);
+      return h;
+    }
+
+    return { animate, stopAll() { Array.from(live).forEach(h => h.stop()); } };
+  })();
+
   /* ═════ INTRO LOADER ══════════════════════════════════════════ */
   function runIntro(done) {
     const cfg  = SITE.intro || {};
@@ -2083,26 +2178,54 @@ const ACCOUNTS = [
     const timers = [];
     const wait = (fn, ms) => timers.push(setTimeout(fn, ms));
 
+    const centerEls = [$('#introEyebrow'), $('.intro__line', el)];
+    const chromeEls = [$('.intro__hint', el), $('#introSkip'), $('.intro__bar', el)];
+
     function finish() {
       if (finished) return;
       finished = true;
       timers.forEach(clearTimeout);
+      Motion.stopAll();
       el.classList.add('is-done');
+      el.style.willChange = 'transform, opacity';
+      Motion.animate(el, { scale: [1, 1.05], opacity: [1, 0] }, 'exit');   // 300ms class
       document.documentElement.classList.remove('intro-up');
-      wait(() => { el.hidden = true; }, 1100);
+      wait(() => { el.hidden = true; el.style.willChange = ''; }, 380);
       done();
     }
 
     /* The landing holds until the visitor comes down themselves: the typing
-       runs its course, then the button appears and waits. No auto-advance. */
+       runs its course, then the button springs in and waits. No auto-advance. */
     function ready() {
       if (finished || readyShown) return;
       readyShown = true;
       out.textContent = phrases[phrases.length - 1];
       el.classList.add('is-ready');
+      /* chrome opacity goes back to CSS so the .is-ready fade-out can run */
+      chromeEls.forEach(n => { n.style.transition = ''; n.style.opacity = ''; });
+      Motion.animate($('.intro__cta', el),
+        { y: [18, 0], scale: [0.92, 1], opacity: [0, 1] }, 'bouncy');
       const enter = $('#introEnter');
       if (enter) enter.focus({ preventScroll: true });
     }
+
+    /* button micro-interactions: retargetable hover/press springs */
+    (function wireEnter() {
+      const btn = $('#introEnter');
+      if (!btn) return;
+      let cur = 1, anim = null;
+      function toScale(target) {
+        if (REDUCED) return;
+        if (anim) anim.stop();
+        const from = cur;
+        anim = Motion.animate(btn, { scale: [from, target] }, 'hover',
+          { onUpdate(p) { cur = from + (target - from) * p; } });
+      }
+      btn.addEventListener('pointerenter', () => toScale(1.045));
+      btn.addEventListener('pointerleave', () => toScale(1));
+      btn.addEventListener('pointerdown',  () => toScale(0.96));
+      btn.addEventListener('pointerup',    () => toScale(1.045));
+    })();
 
     /* early exits: the enter button, Skip, a click anywhere, Esc or Space */
     $('#introEnter').addEventListener('click', finish);
@@ -2119,6 +2242,16 @@ const ACCOUNTS = [
       ready();
       return;
     }
+
+    /* entrance choreography: 50ms between siblings, 100ms between groups.
+       Chrome opacity is JS-held during the springs (transition: none) so
+       the CSS fade rules can't fight the per-frame values. */
+    centerEls.forEach((n, ix) =>
+      Motion.animate(n, { y: [18, 0], opacity: [0, 1] }, 'entrance', { delay: ix * 50 }));
+    chromeEls.forEach((n, ix) => {
+      n.style.transition = 'none';
+      Motion.animate(n, { opacity: [0, 1] }, 'entrance', { delay: 150 + ix * 50 });
+    });
 
     bar.style.transition = 'width ' + total + 'ms linear';
     requestAnimationFrame(() => { bar.style.width = '100%'; });
@@ -2161,7 +2294,8 @@ const ACCOUNTS = [
       })();
     }
 
-    cycle();
+    wait(cycle, 280);                  // let the line spring in before the
+                                       // first character lands
     wait(ready, total + 150);          // hard stop: whatever the typing is
                                        // doing, the door opens at ten seconds
   }
