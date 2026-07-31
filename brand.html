@@ -452,7 +452,12 @@ section[id], div[id], span[id] { scroll-margin-top: calc(var(--nav-h) + 8px); }
 .summary h3 { font-size: 26px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.15; }
 .summary p { font-size: 15px; color: var(--text-2); margin-top: 8px; letter-spacing: -0.01em; }
 .summary__meta { font-size: 12px; color: var(--text-3); margin-top: 12px; letter-spacing: .02em; text-transform: uppercase; }
-.summary__stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.summary__stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: 12px; }
+.summary__role {
+  display: inline-block; font-size: 12px; font-weight: 500;
+  color: var(--accent); background: var(--accent-soft);
+  padding: 4px 11px; border-radius: var(--r-pill); margin-bottom: 12px;
+}
 .mini {
   background: var(--bg-alt); border-radius: var(--r-md); padding: 14px 16px;
 }
@@ -476,8 +481,32 @@ section[id], div[id], span[id] { scroll-margin-top: calc(var(--nav-h) + 8px); }
               opacity .22s var(--ease), border-color .3s var(--ease);
 }
 .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-m); border-color: var(--line); }
-.card:active { transform: translateY(-1px); }
+.card:has(.card__hit:active) { transform: translateY(-1px); }
 .card.is-out, .acct.is-out { opacity: 0; transform: translateY(10px) scale(.985); }
+
+/* Full-card hit target opens the detail sheet; the corner link goes straight
+   to the post. Siblings, not nested — a button may not contain a link. */
+.card__hit {
+  position: absolute; inset: 0; z-index: 3;
+  border-radius: inherit; cursor: pointer;
+}
+.card__hit:focus-visible { outline: none; }
+.card:has(.card__hit:focus-visible) { outline: 4px solid var(--accent-soft); outline-offset: 2px; }
+
+.card__ext {
+  position: absolute; top: 12px; right: 12px; z-index: 4;
+  width: 30px; height: 30px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: rgba(0,0,0,0.45); color: #fff;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  opacity: 0; transform: scale(.88);
+  transition: opacity .25s var(--ease), transform .25s var(--ease), background .2s var(--ease);
+}
+.card:hover .card__ext, .card__ext:focus-visible { opacity: 1; transform: none; }
+.card__ext:hover { background: rgba(0,0,0,0.7); text-decoration: none; }
+.card__ext svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; }
+/* touch devices have no hover, so never hide the link behind one */
+@media (hover: none) { .card__ext { opacity: 1; transform: none; } }
 
 .thumb {
   position: relative; aspect-ratio: 16 / 10; overflow: hidden; flex: none;
@@ -523,9 +552,8 @@ section[id], div[id], span[id] { scroll-margin-top: calc(var(--nav-h) + 8px); }
   text-shadow: 0 1px 6px rgba(0,0,0,0.5);
 }
 
-.card__body { display: block; padding: 16px 18px 18px; }
+.card__body { padding: 16px 18px 18px; }
 .card__brand {
-  display: block;
   font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
   color: var(--text-3); margin-bottom: 6px;
 }
@@ -551,7 +579,7 @@ section[id], div[id], span[id] { scroll-margin-top: calc(var(--nav-h) + 8px); }
    8 — GROWTH / ACCOUNTS
    ═══════════════════════════════════════════════════════════════ */
 .acct-grid {
-  display: grid; gap: 22px; margin-top: 34px;
+  display: grid; gap: 22px; margin-top: 34px; align-items: start;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
 }
 .acct {
@@ -573,6 +601,14 @@ section[id], div[id], span[id] { scroll-margin-top: calc(var(--nav-h) + 8px); }
 .acct__figure { display: flex; align-items: baseline; gap: 9px; margin: 18px 0 4px; }
 .acct__now { font-size: 34px; font-weight: 600; letter-spacing: -0.02em; line-height: 1; }
 .acct__from { font-size: 13px; color: var(--text-3); }
+/* Shown when an account has a start/end but no month-by-month series.
+   Deliberately a fade, not a filled progress bar — it reads as "ramped up"
+   without implying a measured trajectory or a percentage. */
+.acct__ramp {
+  height: 6px; border-radius: 3px; margin-top: 16px; overflow: hidden;
+}
+.acct__ramp span { display: block; height: 100%; width: 100%; border-radius: 3px; }
+.acct__link { font-size: 13px; font-weight: 500; }
 .spark { width: 100%; height: 62px; margin-top: 10px; overflow: visible; }
 .spark path.line { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .spark path.area { stroke: none; }
@@ -868,8 +904,8 @@ html.gated .gate { display: grid !important; }
 
         <div class="sec-head reveal" style="margin-top:40px; margin-bottom:0">
           <p class="eyebrow">Work</p>
-          <h2 class="h2">Videos &amp; campaigns</h2>
-          <p class="sub">Pick one or more partners above to see exactly what shipped, how it performed, and what I owned.</p>
+          <h2 class="h2">The work</h2>
+          <p class="sub">Pick a partner above to see what shipped for them. Every card opens on Instagram.</p>
           <p class="count count--inline" id="countInline" aria-hidden="true"></p>
         </div>
 
@@ -887,7 +923,7 @@ html.gated .gate { display: grid !important; }
         <div class="sec-head reveal">
           <p class="eyebrow">Growth</p>
           <h2 class="h2">Accounts I've grown</h2>
-          <p class="sub">Owned and operated channels, plus partner accounts I ran end to end. Filtered by the same selection.</p>
+          <p class="sub">Partner accounts I directed end to end. Filtered by the same selection as the work above.</p>
         </div>
         <div class="acct-grid" id="acctGrid"></div>
         <div class="empty" id="acctEmpty" hidden>
@@ -960,8 +996,8 @@ html.gated .gate { display: grid !important; }
       <p class="sheet__desc" id="sheetDesc"></p>
       <div class="sheet__metrics" id="sheetMetrics"></div>
       <div class="sheet__cols">
-        <div><h5>What I did</h5><ul id="sheetRole"></ul></div>
-        <div><h5>Outcome</h5><ul id="sheetResult"></ul></div>
+        <div id="sheetDid"><h5>What I did</h5><ul id="sheetRole"></ul></div>
+        <div id="sheetOut"><h5>Outcome</h5><ul id="sheetResult"></ul></div>
       </div>
       <div class="sheet__foot">
         <a class="btn btn--sm" id="sheetLink" href="#" target="_blank" rel="noreferrer noopener">Watch</a>
@@ -1000,215 +1036,185 @@ const ACCESS = {
 };
 
 const SITE = {
-  name: 'Your Name',
-  initials: 'YN',
-  role: 'Creator · Content Strategist',
-  location: 'New York, NY',
-  email: 'hello@yourdomain.com',
+  name: 'Your Name',                       // ← TODO: the one thing I don't have
+  initials: 'YN',                          // ← TODO: your initials
+  role: 'Creative Director · UGC',
+  location: '',                            // ← optional, e.g. 'New York, NY'
+  email: 'aayushiyer06@gmail.com',         // ← swap for a business address if you have one
 
-  heroEyebrow: 'Creator · Growth Partner',
-  heroTitle: "I build audiences brands can't buy.",
-  heroSub: 'Short-form video and channel strategy for consumer brands — from zero-follower launches to nine-figure view counts.',
-  secondaryCta: { label: 'Media kit', href: '#contact' },
+  heroEyebrow: 'Creative Director · UGC Programs',
+  heroTitle: 'I restructure UGC programs until the numbers move.',
+  heroSub: 'Creative direction, format design, and coaching for AI and consumer startups — from a standing-start account to 50K followers, and a single week that did 3M views.',
+  secondaryCta: { label: 'Get in touch', href: '#contact' },
 
-  // value: raw number. display: optional override string.
+  /* Every number here is one you gave me. `value` animates on scroll;
+     `display` overrides the formatted text. Add more as you get them. */
   stats: [
-    { value: 128000000, label: 'Total views' },
-    { value: 2400000,   label: 'Followers grown' },
-    { value: 24,        label: 'Brand partners' },
-    { value: 8.4,       label: 'Avg. engagement', display: '8.4%' }
+    { value: 4,       label: 'Brand partners' },
+    { value: 12,      label: 'Videos shipped' },
+    { value: 3000000, display: '3M',  label: 'Views in a week' },
+    { value: 50000,   display: '50K', label: 'Followers in 2 months' }
   ],
 
   about: {
-    title: 'Six years making things people actually finish watching.',
+    title: 'I rebuild how startups make content, then prove it in the numbers.',
     paragraphs: [
-      'Placeholder. Write two or three paragraphs here about how you got started, what you specialize in, and the through-line across the brands you work with.',
-      'Second paragraph — the proof. Where your work has run, the size of the audiences, the kind of results partners came back for.'
+      'TODO — a few sentences on how you got into UGC, what "restructuring a program" actually means in your hands, and the kind of company you do your best work with.',
+      'TODO — the arc: started hands-on making UGC for Hustl, now directing programs and coaching in-house teams at AI companies like Soren, Argil, and Manus.'
     ],
     facts: [
-      { k: 'Based in',   v: 'New York, NY' },
-      { k: 'Working since', v: '2019' },
-      { k: 'Formats',    v: 'Short-form, YouTube, UGC' },
-      { k: 'Availability', v: 'Q3 2026' }
-    ],
-    // portraitSrc: 'me.jpg'   ← uncomment and point at an image file
+      { k: 'Role',      v: 'Creative Director' },
+      { k: 'Focus',     v: 'UGC programs, short-form' },
+      { k: 'Partners',  v: 'Soren, Argil, Manus, Hustl' },
+      { k: 'Available', v: 'TODO' }
+    ]
+    // portraitSrc: 'assets/me.jpg'   ← drop in a photo and uncomment
   },
 
   contact: {
-    title: "Let's make something.",
-    sub: 'Open to brand partnerships, retainers, and channel builds. Tell me what you\'re launching.',
+    title: "Let's rebuild your UGC program.",
+    sub: 'Open to creative direction, program restructures, and coaching for in-house teams.',
+    /* TODO: add your own handles. Empty array = the row is hidden, so
+       there are no dead links on the page until you fill it in. */
     socials: [
-      { label: '@yourhandle', href: '#', icon: 'instagram' },
-      { label: 'YouTube',     href: '#', icon: 'youtube' },
-      { label: 'TikTok',      href: '#', icon: 'tiktok' },
-      { label: 'LinkedIn',    href: '#', icon: 'linkedin' }
+      // { label: '@yourhandle', href: 'https://instagram.com/yourhandle', icon: 'instagram' },
     ]
   },
 
   services: [
-    { icon: 'video', title: 'Short-form content',
-      body: 'Concept, script, shoot, edit. Built for the platform, not repurposed onto it.',
-      bullets: ['Hook-first scripting', 'Vertical-native edit', '4–12 assets / month'] },
-    { icon: 'chart', title: 'Channel growth',
-      body: 'Full account operation: posting cadence, format testing, and the analytics loop behind it.',
-      bullets: ['Format R&D', 'Weekly reporting', 'Community management'] },
-    { icon: 'handshake', title: 'Brand partnerships',
-      body: 'Integrations that read as content first, so the audience stays through the pitch.',
-      bullets: ['Integrated & dedicated', 'Whitelisting / usage rights', 'Multi-platform cutdowns'] },
-    { icon: 'compass', title: 'Consulting',
-      body: 'For in-house teams who want the playbook rather than the hands.',
-      bullets: ['Content audits', 'Team workshops', 'Strategy sprints'] }
+    { icon: 'compass', title: 'UGC program restructures',
+      body: 'Come in, audit what is being made and why, and rebuild the program around formats that actually earn attention.',
+      bullets: ['Program audit', 'Format architecture', 'Creator briefs & pipeline'] },
+    { icon: 'video', title: 'Creative direction',
+      body: 'Direction on every asset — hook, structure, and edit — so a batch reads as one deliberate body of work.',
+      bullets: ['Concept & hooks', 'Shot direction', 'Edit supervision'] },
+    { icon: 'handshake', title: 'Coaching in-house teams',
+      body: 'For teams who want to own it themselves. I build the format with you and coach the people who will keep running it.',
+      bullets: ['Format design', 'Team coaching', 'Playbooks that outlast me'] },
+    { icon: 'chart', title: 'Hands-on UGC',
+      body: 'Where it started, and still the fastest way to prove a format works before a team scales it.',
+      bullets: ['Concept to final cut', 'Creator-led delivery', 'Rapid format testing'] }
   ]
 };
 
 /* ── BRANDS ───────────────────────────────────────────────────────
-   id       unique key, referenced by WORK + ACCOUNTS
-   mark     1–2 letters for the monogram tile
-   color    tile + thumbnail gradient
+   id          unique key, referenced by WORK + ACCOUNTS
+   mark        1–2 letters for the monogram tile
+   color       tile + thumbnail gradient
+   role        shown as a pill in the selection summary
+   highlights  headline results — ONLY put real numbers here
+   did/result  fall back onto every video of this brand in the detail
+               sheet, so each one says something true without needing
+               per-video copy. Override per video in WORK when you
+               have something specific to say.
    ---------------------------------------------------------------- */
 const BRANDS = [
-  { id: 'northwind', name: 'Northwind Athletics', mark: 'NA', category: 'Sportswear',    year: '2024 — present', color: '#0071e3',
-    summary: 'Placeholder — one line on what the partnership was and what you were hired to do.' },
-  { id: 'cadence',   name: 'Cadence Coffee',      mark: 'CC', category: 'Beverage',      year: '2023 — 2025',    color: '#ff9f0a',
-    summary: 'Placeholder — scope of the engagement, in one sentence.' },
-  { id: 'halo',      name: 'Halo Skincare',       mark: 'HS', category: 'Beauty',        year: '2024',           color: '#ff375f',
-    summary: 'Placeholder — what you built for them.' },
-  { id: 'meridian',  name: 'Meridian',            mark: 'MD', category: 'Fintech',       year: '2025 — present', color: '#30d158',
-    summary: 'Placeholder — the brief and the result in one line.' },
-  { id: 'vireo',     name: 'Vireo Wellness',      mark: 'VW', category: 'Health',        year: '2022 — 2024',    color: '#bf5af2',
-    summary: 'Placeholder — how the relationship started and where it went.' },
-  { id: 'studio9',   name: 'Studio Nine',         mark: 'S9', category: 'Home',          year: '2023',           color: '#64d2ff',
-    summary: 'Placeholder — the campaign in a sentence.' },
-  { id: 'own',       name: 'Own channels',        mark: '★',  category: 'Personal brand', year: '2019 — present', color: '#8e8e93',
-    summary: 'Everything I make under my own name — the R&D lab for everything else.' }
+  { id: 'soren', name: 'Soren', mark: 'SO', category: 'EasySlice AI', year: '', color: '#0071e3',
+    role: 'Creative Director',
+    summary: 'Rebuilt the UGC program from scratch and took the account from a standing start to 50K followers in two months.',
+    highlights: [{ v: '0 → 50K', l: 'Followers in 2 months' }],
+    did: ['Restructured the UGC program', 'Creative direction across every asset'],
+    result: ['0 → 50K followers in 2 months'] },
+
+  { id: 'argil', name: 'Argil', mark: 'AR', category: 'UGC program', year: '', color: '#bf5af2',
+    role: 'Creative Director',
+    summary: 'Directed the UGC that produced a three-million-view week.',
+    highlights: [{ v: '3M', l: 'Views in a week' }],
+    did: ['Creative direction', 'UGC program'],
+    result: ['3M views in a week'] },
+
+  { id: 'manus', name: 'Manus', mark: 'MA', category: 'Coaching & format design', year: '', color: '#30d158',
+    role: 'Coaching · Format design',
+    summary: 'Coached the team and helped build the format this post runs on.',
+    highlights: [],
+    did: ['Coaching', 'Helped build the format'],
+    result: [] },
+
+  { id: 'hustl', name: 'Hustl', mark: 'HU', category: 'First UGC project', year: '', color: '#ff9f0a',
+    role: 'UGC creator',
+    summary: 'The first startup I made UGC for — where the whole thing started.',
+    highlights: [],
+    did: ['UGC creation — my first project'],
+    result: [] }
 ];
 
 /* ── WORK ─────────────────────────────────────────────────────────
-   brand     BRANDS id
-   format    'short' | 'long' | 'campaign'   (drives the segmented control)
-   thumb     optional image path — omit for the generated gradient tile
-   views/likes/comments/shares → numbers, rendered with K/M formatting
+   Every link below is one you sent me. What is still TODO:
+
+   • title  — currently generic ("Reel 01"). Replace with the hook or
+              concept; this is the biggest single upgrade to the page.
+   • views / likes / comments / shares — omit them entirely rather
+              than guessing. A card with no numbers renders clean; a
+              card with numbers shows a metric strip. I left them out
+              because I don't have them.
+   • thumb  — optional. Screenshot the reel, save it to assets/, and
+              set thumb: 'assets/soren-01.jpg'. Without it you get the
+              generated brand-gradient tile, which is intentional and
+              fine to ship.
+   • desc   — one line of context shown in the detail sheet.
+
+   contribution → drives the segmented control: 'direction' | 'coaching' | 'ugc'
    ---------------------------------------------------------------- */
 const WORK = [
-  { id: 'w1', brand: 'northwind', format: 'short', platform: 'tiktok',
-    title: 'Placeholder — the launch film that opened the partnership',
-    date: 'Mar 2025', duration: '0:42', tall: true,
-    views: 4200000, likes: 512000, comments: 8400, shares: 61000,
-    desc: 'One paragraph on the brief, the idea, and why this version worked. Replace with the real story.',
-    role: ['Concept & script', 'Directed the shoot', 'Edit and sound design'],
-    result: ['4.2M views in 9 days', 'Top-performing asset of the campaign', 'Recut into 3 paid variants'],
-    href: '#' },
+  /* ── Soren (EasySlice AI) ── */
+  { id: 'so1', brand: 'soren', contribution: 'direction', platform: 'instagram', tall: true,
+    title: 'Reel 01', href: 'https://www.instagram.com/reel/DVIJpkqjNJS/' },
+  { id: 'so2', brand: 'soren', contribution: 'direction', platform: 'instagram', tall: true,
+    title: 'Reel 02', href: 'https://www.instagram.com/reel/DUwnCj6DOps/' },
+  { id: 'so3', brand: 'soren', contribution: 'direction', platform: 'instagram', tall: true,
+    title: 'Reel 03', href: 'https://www.instagram.com/reel/DSlxHf5DQ_n/' },
+  { id: 'so4', brand: 'soren', contribution: 'direction', platform: 'instagram', tall: true,
+    title: 'Reel 04', href: 'https://www.instagram.com/reel/DU2EeLejIlK/' },
+  { id: 'so5', brand: 'soren', contribution: 'direction', platform: 'instagram', tall: true,
+    title: 'Reel 05', href: 'https://www.instagram.com/reel/DVOVUxAgJ8O/' },
+  { id: 'so6', brand: 'soren', contribution: 'direction', platform: 'instagram', tall: true,
+    title: 'Reel 06', href: 'https://www.instagram.com/reel/DW2iBVoDFA8/' },
 
-  { id: 'w2', brand: 'northwind', format: 'campaign', platform: 'instagram',
-    title: 'Placeholder — six-part series for the spring drop',
-    date: 'Apr 2025', duration: '6 assets',
-    views: 9800000, likes: 740000, comments: 12500, shares: 88000,
-    desc: 'Placeholder description of the campaign arc and how the six pieces laddered together.',
-    role: ['Series architecture', 'Talent direction', 'Posting strategy'],
-    result: ['9.8M cumulative views', '+140K followers to brand account', 'Extended for a second flight'],
-    href: '#' },
+  /* ── Argil ── */
+  { id: 'ar1', brand: 'argil', contribution: 'direction', platform: 'instagram', tall: true,
+    title: 'Reel 01', href: 'https://www.instagram.com/reel/DXlZUfTj2MW/' },
+  { id: 'ar2', brand: 'argil', contribution: 'direction', platform: 'instagram', tall: true,
+    title: 'Reel 02', href: 'https://www.instagram.com/reel/DXgNkHoj8uh/' },
 
-  { id: 'w3', brand: 'cadence', format: 'short', platform: 'tiktok',
-    title: 'Placeholder — the one that broke out',
-    date: 'Nov 2024', duration: '0:31', tall: true,
-    views: 7100000, likes: 980000, comments: 21000, shares: 154000,
-    desc: 'Placeholder — what made this one land, and what you learned that fed the rest of the work.',
-    role: ['Concept', 'Shot & edited solo'],
-    result: ['7.1M views', 'Sold out the SKU in 5 days'],
-    href: '#' },
+  /* ── Manus ── */
+  { id: 'ma1', brand: 'manus', contribution: 'coaching', platform: 'instagram', tall: true,
+    title: 'The format, built together',
+    desc: 'Coached the team and helped build the format this post runs on.',
+    href: 'https://www.instagram.com/p/DWyxm0xDmJX/' },
 
-  { id: 'w4', brand: 'cadence', format: 'long', platform: 'youtube',
-    title: 'Placeholder — long-form brand documentary',
-    date: 'Jan 2025', duration: '11:26',
-    views: 640000, likes: 38000, comments: 2900, shares: 6100,
-    desc: 'Placeholder — the pitch for going long-form and how it performed against the short-form baseline.',
-    role: ['Story producing', 'Interviews', 'Post supervision'],
-    result: ['62% average view duration', 'Highest-converting asset of the quarter'],
-    href: '#' },
-
-  { id: 'w5', brand: 'halo', format: 'short', platform: 'instagram',
-    title: 'Placeholder — founder-led explainer series',
-    date: 'Jun 2024', duration: '0:55', tall: true,
-    views: 2900000, likes: 310000, comments: 7600, shares: 40000,
-    desc: 'Placeholder copy about the format and why founder-led worked for this category.',
-    role: ['Format design', 'On-camera coaching', 'Edit'],
-    result: ['2.9M views across 8 posts', 'Became the brand\'s default format'],
-    href: '#' },
-
-  { id: 'w6', brand: 'meridian', format: 'campaign', platform: 'youtube',
-    title: 'Placeholder — always-on education campaign',
-    date: 'Feb 2026', duration: '12 assets',
-    views: 3400000, likes: 190000, comments: 5200, shares: 24000,
-    desc: 'Placeholder — how a dry category got made watchable.',
-    role: ['Editorial calendar', 'Scripting', 'Analytics loop'],
-    result: ['3.4M views in 4 months', 'CPM 38% below paid benchmark'],
-    href: '#' },
-
-  { id: 'w7', brand: 'vireo', format: 'short', platform: 'tiktok',
-    title: 'Placeholder — the format that ran for two years',
-    date: 'Sep 2023', duration: '0:38', tall: true,
-    views: 5600000, likes: 620000, comments: 14000, shares: 97000,
-    desc: 'Placeholder — origin of the recurring format and how it compounded.',
-    role: ['Format invention', 'Weekly production'],
-    result: ['104 episodes', '5.6M views on the pilot alone'],
-    href: '#' },
-
-  { id: 'w8', brand: 'studio9', format: 'campaign', platform: 'instagram',
-    title: 'Placeholder — holiday launch package',
-    date: 'Dec 2023', duration: '9 assets',
-    views: 1800000, likes: 121000, comments: 3100, shares: 15000,
-    desc: 'Placeholder — the seasonal brief and the deliverables.',
-    role: ['Creative direction', 'Production', 'Paid cutdowns'],
-    result: ['1.8M organic views', '4.1× ROAS on the paid variants'],
-    href: '#' },
-
-  { id: 'w9', brand: 'own', format: 'long', platform: 'youtube',
-    title: 'Placeholder — the video that started everything',
-    date: 'Aug 2021', duration: '14:02',
-    views: 12400000, likes: 690000, comments: 41000, shares: 210000,
-    desc: 'Placeholder — your own flagship piece and what it unlocked.',
-    role: ['Everything'],
-    result: ['12.4M views', 'First brand inbound arrived within a week'],
-    href: '#' },
-
-  { id: 'w10', brand: 'own', format: 'short', platform: 'tiktok',
-    title: 'Placeholder — recurring series on your own channel',
-    date: '2024 — present', duration: '0:45', tall: true,
-    views: 31000000, likes: 2900000, comments: 88000, shares: 420000,
-    desc: 'Placeholder — the series, the cadence, and the audience it built.',
-    role: ['Weekly production', 'Community'],
-    result: ['31M cumulative views', 'Core of the audience you sell against'],
-    href: '#' }
+  /* ── Hustl ── */
+  { id: 'hu1', brand: 'hustl', contribution: 'ugc', platform: 'instagram', tall: true,
+    title: 'Reel 01', href: 'https://www.instagram.com/reel/DNKDJgYNwjP/' },
+  { id: 'hu2', brand: 'hustl', contribution: 'ugc', platform: 'instagram', tall: true,
+    title: 'Reel 02', href: 'https://www.instagram.com/reel/DM8RVj6J1aI/' },
+  { id: 'hu3', brand: 'hustl', contribution: 'ugc', platform: 'instagram', tall: true,
+    title: 'Reel 03', href: 'https://www.instagram.com/reel/DNNwQd8tl1h/' }
 ];
 
 /* ── ACCOUNTS ─────────────────────────────────────────────────────
-   series   follower counts over time — any length, evenly spaced.
-            It only needs to be shaped right; the chart scales itself.
+   Two ways to show growth:
+
+   1. from / to        → a clean "0 → 50K" figure. Use this when you
+                         know where it started and where it landed.
+   2. series: [...]    → follower counts over time, evenly spaced,
+                         drawn as a real curve. Only fill this in with
+                         actual numbers — I deliberately left it empty
+                         rather than invent a shape for your growth.
+
+   An account with neither still renders as a credit with a link out.
    ---------------------------------------------------------------- */
 const ACCOUNTS = [
-  { id: 'a1', brand: 'own', handle: '@yourhandle', platform: 'tiktok',
-    window: 'Jan 2022 → today', note: 'Owned',
-    series: [12000, 28000, 51000, 96000, 180000, 260000, 390000, 520000, 690000, 840000, 980000, 1240000] },
+  { id: 'ac-soren', brand: 'soren', handle: '', platform: 'instagram',
+    window: '2 months', note: 'Creative direction',
+    from: 0, to: 50000,
+    series: [],                                    // ← add monthly numbers for a curve
+    href: '' },                                    // ← TODO: the @ / profile URL
 
-  { id: 'a2', brand: 'own', handle: '@yourhandle', platform: 'youtube',
-    window: 'Jan 2022 → today', note: 'Owned',
-    series: [3000, 7000, 15000, 24000, 38000, 61000, 88000, 120000, 165000, 210000, 268000, 340000] },
-
-  { id: 'a3', brand: 'northwind', handle: '@northwind', platform: 'instagram',
-    window: 'Mar 2024 → today', note: 'Operated',
-    series: [42000, 55000, 71000, 96000, 128000, 164000, 205000, 249000] },
-
-  { id: 'a4', brand: 'cadence', handle: '@cadencecoffee', platform: 'tiktok',
-    window: 'Feb 2023 → Dec 2025', note: 'Operated',
-    series: [1200, 6000, 19000, 44000, 82000, 131000, 178000, 226000, 271000] },
-
-  { id: 'a5', brand: 'vireo', handle: '@vireowellness', platform: 'instagram',
-    window: 'Sep 2022 → Jun 2024', note: 'Operated',
-    series: [8000, 14000, 26000, 45000, 68000, 91000, 118000, 143000] },
-
-  { id: 'a6', brand: 'meridian', handle: '@meridian', platform: 'youtube',
-    window: 'Feb 2025 → today', note: 'Advisory',
-    series: [0, 2400, 7800, 16000, 29000, 46000, 62000] }
+  { id: 'ac-hustl', brand: 'hustl', handle: '@joinhustl', platform: 'instagram',
+    window: '', note: 'UGC',
+    from: null, to: null,                          // ← add numbers if you have them
+    series: [],
+    href: 'https://www.instagram.com/joinhustl/reels/' }
 ];
 
 /* ╔═══════════════════════════════════════════════════════════════╗
@@ -1244,7 +1250,10 @@ const ACCOUNTS = [
     instagram:'<svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.3 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.8s0 3.5-.1 4.8c-.1 1.2-.3 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.3-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.5 2.2 15.1 2.2 12s0-3.5.1-4.8c.1-1.2.3-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2Zm0 1.8c-3.1 0-3.5 0-4.7.1-.9 0-1.4.2-1.7.3-.4.2-.7.4-1 .7-.3.3-.5.6-.7 1-.1.3-.3.8-.3 1.7-.1 1.2-.1 1.6-.1 4.2s0 3 .1 4.2c0 .9.2 1.4.3 1.7.2.4.4.7.7 1 .3.3.6.5 1 .7.3.1.8.3 1.7.3 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c.9 0 1.4-.2 1.7-.3.4-.2.7-.4 1-.7.3-.3.5-.6.7-1 .1-.3.3-.8.3-1.7.1-1.2.1-1.6.1-4.2s0-3-.1-4.2c0-.9-.2-1.4-.3-1.7-.2-.4-.4-.7-.7-1-.3-.3-.6-.5-1-.7-.3-.1-.8-.3-1.7-.3-1.2-.1-1.6-.1-4.7-.1Zm0 3.1a4.9 4.9 0 1 1 0 9.8 4.9 4.9 0 0 1 0-9.8Zm0 8.1a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4Zm6.2-8.3a1.1 1.1 0 1 1-2.3 0 1.1 1.1 0 0 1 2.3 0Z"/></svg>',
     linkedin: '<svg viewBox="0 0 24 24"><path d="M4.6 3a1.9 1.9 0 1 0 0 3.8 1.9 1.9 0 0 0 0-3.8ZM3 8.4h3.2V21H3V8.4Zm5.6 0h3.1v1.7h.1c.4-.8 1.5-1.8 3.2-1.8 3.4 0 4 2.2 4 5.1V21h-3.2v-6c0-1.4 0-3.2-2-3.2s-2.3 1.6-2.3 3.1V21H8.6V8.4Z"/></svg>',
     x:        '<svg viewBox="0 0 24 24"><path d="M17.5 3h3.1l-6.8 7.8L21.8 21h-6.2l-4.9-6.4L5.1 21H2l7.3-8.3L2.3 3h6.4l4.4 5.8L17.5 3Zm-1.1 16.2h1.7L7.7 4.7H5.9l10.5 14.5Z"/></svg>',
-    web:      '<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm6.9 9h-3a15.3 15.3 0 0 0-1.3-5.6A8 8 0 0 1 18.9 11ZM12 4.1c.8 1.1 1.7 3.2 1.9 6.9h-3.8c.2-3.7 1.1-5.8 1.9-6.9ZM5.1 11a8 8 0 0 1 4.3-5.6A15.3 15.3 0 0 0 8.1 11h-3Zm0 2h3a15.3 15.3 0 0 0 1.3 5.6A8 8 0 0 1 5.1 13ZM12 19.9c-.8-1.1-1.7-3.2-1.9-6.9h3.8c-.2 3.7-1.1 5.8-1.9 6.9Zm2.6-1.3a15.3 15.3 0 0 0 1.3-5.6h3a8 8 0 0 1-4.3 5.6Z"/></svg>'
+    web:      '<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm6.9 9h-3a15.3 15.3 0 0 0-1.3-5.6A8 8 0 0 1 18.9 11ZM12 4.1c.8 1.1 1.7 3.2 1.9 6.9h-3.8c.2-3.7 1.1-5.8 1.9-6.9ZM5.1 11a8 8 0 0 1 4.3-5.6A15.3 15.3 0 0 0 8.1 11h-3Zm0 2h3a15.3 15.3 0 0 0 1.3 5.6A8 8 0 0 1 5.1 13ZM12 19.9c-.8-1.1-1.7-3.2-1.9-6.9h3.8c-.2 3.7-1.1 5.8-1.9 6.9Zm2.6-1.3a15.3 15.3 0 0 0 1.3-5.6h3a8 8 0 0 1-4.3 5.6Z"/></svg>',
+    external: '<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">' +
+              '<path d="M14 4h6v6"/><path d="M20 4 10.5 13.5"/>' +
+              '<path d="M18 14.5V19a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 19V8a1.5 1.5 0 0 1 1.5-1.5H10"/></svg>'
   };
   const SVC_ICONS = {
     video:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5.5" width="13" height="13" rx="3"/><path d="M15.5 10.5 21.5 7v10l-6-3.5z"/></svg>',
@@ -1262,18 +1271,26 @@ const ACCOUNTS = [
       Math.max(0, Math.min(255, Math.round(v + amt))));
     return 'rgb(' + c.join(',') + ')';
   }
-  function thumbStyle(color) {
-    return 'background:linear-gradient(140deg,' + shade(color, 26) + ' 0%,' + color +
-           ' 52%,' + shade(color, -52) + ' 100%)';
+  /* Seeded so a run of reels from one brand reads as a set rather than the
+     same swatch repeated — angle and depth shift per item, hue stays put. */
+  function thumbStyle(color, seed) {
+    const s = seed || 0;
+    const angle = 118 + (s % 5) * 21;
+    const lift  = 34 - (s % 3) * 15;
+    const drop  = -38 - (s % 4) * 13;
+    return 'background:linear-gradient(' + angle + 'deg,' + shade(color, lift) + ' 0%,' +
+           color + ' 50%,' + shade(color, drop) + ' 100%)';
   }
 
   /* ── state ──────────────────────────────────────────────────── */
-  const state = { brands: new Set(), format: 'all', list: [], index: -1 };
-  const FORMATS = [
-    { id: 'all',      label: 'All' },
-    { id: 'short',    label: 'Short-form' },
-    { id: 'long',     label: 'Long-form' },
-    { id: 'campaign', label: 'Campaigns' }
+  const state = { brands: new Set(), lane: 'all', list: [], index: -1 };
+  /* second axis: what I actually did on the work, not the file format —
+     everything here is short-form, so format would filter nothing. */
+  const LANES = [
+    { id: 'all',       label: 'All' },
+    { id: 'direction', label: 'Creative direction' },
+    { id: 'coaching',  label: 'Coaching' },
+    { id: 'ugc',       label: 'UGC' }
   ];
 
   /* ═════ RENDER: static chrome ═════════════════════════════════ */
@@ -1315,18 +1332,36 @@ const ACCOUNTS = [
     $('#contactSub').textContent = SITE.contact.sub;
     $('#contactMail').href = 'mailto:' + SITE.email;
     $('#contactMail').textContent = SITE.email;
-    $('#socials').innerHTML = SITE.contact.socials.map(s =>
+    /* no dead links: the row disappears entirely until handles are added */
+    const socials = SITE.contact.socials || [];
+    $('#socials').innerHTML = socials.map(s =>
       '<a class="social" href="' + esc(s.href) + '" target="_blank" rel="noreferrer noopener">' +
       platIcon(s.icon) + esc(s.label) + '</a>').join('');
+    $('#socials').hidden = socials.length === 0;
 
     $('#footCopy').textContent = '© ' + new Date().getFullYear() + ' ' + SITE.name + '. All rights reserved.';
 
-    /* marquee — duplicated once so the loop is seamless */
-    const items = BRANDS.map(b =>
+    buildMarquee();
+  }
+
+  /* The track slides exactly -50%, so it only looks seamless if the two
+     halves are identical AND the whole track is wider than the viewport.
+     With a handful of partners one set is far too narrow, so tile the set
+     until half the track covers the screen, then keep the speed constant. */
+  function buildMarquee() {
+    const set = BRANDS.map(b =>
       '<button class="marquee__item" data-brand="' + b.id + '">' +
       '<span class="mono-mark" style="background:' + b.color + '">' + esc(b.mark) + '</span>' +
       esc(b.name) + '</button>').join('');
-    $('#marquee').innerHTML = items + items;
+
+    const track = $('#marquee');
+    track.innerHTML = set;
+    const setWidth = track.scrollWidth || 1;
+    const reps = Math.max(2, Math.ceil(window.innerWidth / setWidth) + 1) * 2;
+    track.innerHTML = new Array(reps).fill(set).join('');
+
+    const SPEED = 46;                                  // px per second
+    track.style.animationDuration = ((setWidth * reps / 2) / SPEED).toFixed(1) + 's';
   }
 
   /* ═════ RENDER: filter controls ═══════════════════════════════ */
@@ -1336,16 +1371,18 @@ const ACCOUNTS = [
       '<button class="chip chip--all" data-brand="" aria-pressed="true">All work' +
       '<span class="chip__n">' + WORK.length + '</span></button>' +
       BRANDS.map(b => {
-        const n = WORK.filter(w => w.brand === b.id).length +
-                  ACCOUNTS.filter(a => a.brand === b.id).length;
+        // videos only, so the per-brand counts add up to the "All work" total
+        const n = WORK.filter(w => w.brand === b.id).length;
         return '<button class="chip" data-brand="' + b.id + '" aria-pressed="false">' +
           '<span class="mono-mark chip__mark" style="background:' + b.color + '">' + esc(b.mark) + '</span>' +
           esc(b.name) + '<span class="chip__n">' + n + '</span></button>';
       }).join('');
 
-    $('#formatSeg').innerHTML = FORMATS.map(f =>
-      '<button data-format="' + f.id + '" aria-pressed="' + (f.id === state.format) + '">' +
-      f.label + '</button>').join('');
+    /* only offer lanes that actually have work behind them */
+    $('#formatSeg').innerHTML = LANES
+      .filter(l => l.id === 'all' || WORK.some(w => w.contribution === l.id))
+      .map(l => '<button data-lane="' + l.id + '" aria-pressed="' + (l.id === state.lane) + '">' +
+        l.label + '</button>').join('');
 
     rail.addEventListener('click', e => {
       const chip = e.target.closest('.chip');
@@ -1359,7 +1396,7 @@ const ACCOUNTS = [
     $('#formatSeg').addEventListener('click', e => {
       const b = e.target.closest('button');
       if (!b) return;
-      state.format = b.dataset.format;
+      state.lane = b.dataset.lane;
       apply();
     });
 
@@ -1376,29 +1413,38 @@ const ACCOUNTS = [
   }
 
   /* ═════ RENDER: cards ═════════════════════════════════════════ */
-  function workCard(w) {
+  function workCard(w, i) {
     const b = brandById(w.brand) || { name: '—', color: '#8e8e93', mark: '?' };
     const media = w.thumb
       ? '<img src="' + esc(w.thumb) + '" alt="">'
       : '<span class="thumb__glyph">' + esc(b.mark) + '</span>';
-    // spans throughout: the card is a <button>, which may only contain phrasing content
-    return '<button class="card is-out" data-id="' + w.id + '" data-brand="' + w.brand +
-      '" data-format="' + w.format + '">' +
-      '<span class="thumb' + (w.tall ? ' thumb--tall' : '') + '" style="' + thumbStyle(b.color) + '">' + media +
-        '<span class="thumb__badges"><span class="badge">' + platIcon(w.platform) +
-          esc(PLAT_NAME[w.platform] || w.platform) + '</span>' +
+    const plat = PLAT_NAME[w.platform] || w.platform;
+
+    /* metric strip only when real numbers exist — never a row of dashes */
+    const metrics = metric('Views', w.views) + metric('Likes', w.likes) +
+                    metric('Comments', w.comments) + metric('Shares', w.shares);
+
+    const ext = w.href
+      ? '<a class="card__ext" href="' + esc(w.href) + '" target="_blank" rel="noreferrer noopener" ' +
+        'aria-label="Open ' + esc(w.title) + ' on ' + esc(plat) + '">' + ICONS.external + '</a>'
+      : '';
+
+    return '<article class="card is-out" data-brand="' + w.brand +
+      '" data-lane="' + w.contribution + '" data-id="' + w.id + '">' +
+      '<span class="thumb' + (w.tall ? ' thumb--tall' : '') + '" style="' + thumbStyle(b.color, i) + '">' + media +
+        '<span class="thumb__badges"><span class="badge">' + platIcon(w.platform) + esc(plat) + '</span>' +
           (w.duration ? '<span class="badge">' + esc(w.duration) + '</span>' : '') + '</span>' +
         '<span class="thumb__play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>' +
-        '<span class="thumb__stat num">' + fmt(w.views) + ' views</span>' +
+        (w.views ? '<span class="thumb__stat num">' + fmt(w.views) + ' views</span>' : '') +
       '</span>' +
-      '<span class="card__body">' +
-        '<span class="card__brand">' + esc(b.name) + ' · ' + esc(w.date) + '</span>' +
-        '<span class="card__title">' + esc(w.title) + '</span>' +
-        '<span class="card__metrics">' +
-          metric('Views', w.views) + metric('Likes', w.likes) +
-          metric('Comments', w.comments) + metric('Shares', w.shares) +
-        '</span>' +
-      '</span></button>';
+      '<div class="card__body">' +
+        '<p class="card__brand">' + esc(b.name) + (w.date ? ' · ' + esc(w.date) : '') + '</p>' +
+        '<h3 class="card__title">' + esc(w.title) + '</h3>' +
+        (metrics ? '<div class="card__metrics">' + metrics + '</div>' : '') +
+      '</div>' +
+      '<button class="card__hit" data-id="' + w.id + '" aria-label="View details: ' +
+        esc(w.title) + ' for ' + esc(b.name) + '"></button>' + ext +
+    '</article>';
   }
   function metric(label, v) {
     if (v === undefined || v === null) return '';
@@ -1434,22 +1480,50 @@ const ACCOUNTS = [
 
   function acctCard(a) {
     const b = brandById(a.brand) || { name: '—', color: '#8e8e93' };
-    const from = a.series[0], now = a.series[a.series.length - 1];
-    const mult = from > 0 ? (now / from) : null;
-    const delta = mult ? (mult >= 10 ? Math.round(mult) + '×' : (Math.round(mult * 10) / 10) + '×')
-                       : '+' + fmt(now);
+    const series = Array.isArray(a.series) && a.series.length > 1 ? a.series : null;
+
+    /* a real curve when there's a series, otherwise the start/end pair,
+       otherwise just a credit — never an invented trajectory */
+    const has = v => v === 0 || (v !== null && v !== undefined);
+    const from = series ? series[0] : (has(a.from) ? a.from : null);
+    const now  = series ? series[series.length - 1] : (has(a.to) ? a.to : null);
+    const hasFigure = has(now);
+
+    let delta = '';
+    if (hasFigure) {
+      if (from > 0) {
+        const m = now / from;
+        delta = (m >= 10 ? Math.round(m) : Math.round(m * 10) / 10) + '×';
+      } else {
+        delta = '+' + fmt(now);
+      }
+    }
+
+    const figure = hasFigure
+      ? '<div class="acct__figure"><span class="acct__now num">' + fmt(now) + '</span>' +
+          (has(from) ? '<span class="acct__from num">from ' + fmt(from) + '</span>' : '') + '</div>' +
+        (series
+          ? sparkline(series, b.color)
+          : '<div class="acct__ramp"><span style="background:linear-gradient(90deg,' +
+            b.color + '14,' + b.color + ')"></span></div>')
+      : '';
+
+    const foot = [
+      a.window ? '<span>' + esc(a.window) + '</span>' : '',
+      a.href ? '<a class="acct__link" href="' + esc(a.href) + '" target="_blank" ' +
+               'rel="noreferrer noopener">View channel ›</a>' : '',
+      a.note ? '<span class="tag">' + esc(a.note) + '</span>' : ''
+    ].filter(Boolean);
+
     return '<article class="acct is-out" data-brand="' + a.brand + '">' +
       '<div class="acct__top">' +
         '<span class="mono-mark" style="background:' + b.color + '">' + platIcon(a.platform) + '</span>' +
-        '<div><div class="acct__handle">' + esc(a.handle) + '</div>' +
-        '<div class="acct__plat">' + esc(PLAT_NAME[a.platform] || a.platform) + ' · ' + esc(b.name) + '</div></div>' +
-        '<span class="acct__delta">' + delta + '</span>' +
-      '</div>' +
-      '<div class="acct__figure"><span class="acct__now num">' + fmt(now) + '</span>' +
-        '<span class="acct__from num">from ' + fmt(from) + '</span></div>' +
-      sparkline(a.series, b.color) +
-      '<div class="acct__foot"><span>' + esc(a.window) + '</span>' +
-        '<span class="tag">' + esc(a.note) + '</span></div>' +
+        '<div><div class="acct__handle">' + esc(a.handle || b.name) + '</div>' +
+        '<div class="acct__plat">' + esc(PLAT_NAME[a.platform] || a.platform) +
+          (a.handle ? ' · ' + esc(b.name) : '') + '</div></div>' +
+        (delta ? '<span class="acct__delta">' + delta + '</span>' : '') +
+      '</div>' + figure +
+      (foot.length ? '<div class="acct__foot">' + foot.join('') + '</div>' : '') +
     '</article>';
   }
 
@@ -1460,9 +1534,11 @@ const ACCOUNTS = [
     $$('.acct__top .mono-mark svg').forEach(s => {
       s.style.width = '15px'; s.style.height = '15px'; s.style.fill = '#fff';
     });
+    /* the corner link is a sibling above the hit target, so clicking it
+       navigates to the post instead of opening the sheet */
     $('#workGrid').addEventListener('click', e => {
-      const card = e.target.closest('.card');
-      if (card) openSheet(card.dataset.id);
+      const hit = e.target.closest('.card__hit');
+      if (hit) openSheet(hit.dataset.id);
     });
   }
 
@@ -1470,8 +1546,8 @@ const ACCOUNTS = [
   function matchesBrand(item) {
     return state.brands.size === 0 || state.brands.has(item.brand);
   }
-  function matchesFormat(w) {
-    return state.format === 'all' || w.format === state.format;
+  function matchesLane(w) {
+    return state.lane === 'all' || w.contribution === state.lane;
   }
 
   function apply() {
@@ -1483,11 +1559,11 @@ const ACCOUNTS = [
       c.setAttribute('aria-pressed', String(id ? sel.has(id) : sel.size === 0));
     });
     $$('#formatSeg button').forEach(b =>
-      b.setAttribute('aria-pressed', String(b.dataset.format === state.format)));
+      b.setAttribute('aria-pressed', String(b.dataset.lane === state.lane)));
     $('#clearBtn').hidden = sel.size === 0;
 
     /* which items survive */
-    const workOn = WORK.filter(w => matchesBrand(w) && matchesFormat(w));
+    const workOn = WORK.filter(w => matchesBrand(w) && matchesLane(w));
     const acctOn = ACCOUNTS.filter(matchesBrand);
     state.list = workOn;
 
@@ -1497,12 +1573,18 @@ const ACCOUNTS = [
     $('#workEmpty').hidden = workOn.length > 0;
     $('#acctEmpty').hidden = acctOn.length > 0;
 
-    /* counter — same string in the sticky bar (desktop) and inline (phones) */
+    /* counter — same string in the sticky bar (desktop) and inline (phones).
+       The views clause only appears once there are real view counts. */
     const views = workOn.reduce((s, w) => s + (w.views || 0), 0);
-    const label =
-      '<strong>' + workOn.length + '</strong> ' + (workOn.length === 1 ? 'piece' : 'pieces') +
-      ' · <strong>' + acctOn.length + '</strong> ' + (acctOn.length === 1 ? 'account' : 'accounts') +
-      ' · <strong class="num">' + fmt(views) + '</strong> views';
+    const parts = [
+      '<strong>' + workOn.length + '</strong> ' + (workOn.length === 1 ? 'video' : 'videos')
+    ];
+    if (acctOn.length) {
+      parts.push('<strong>' + acctOn.length + '</strong> ' +
+        (acctOn.length === 1 ? 'account' : 'accounts'));
+    }
+    if (views > 0) parts.push('<strong class="num">' + fmt(views) + '</strong> views');
+    const label = parts.join(' · ');
     $('#count').innerHTML = label;
     $('#countInline').innerHTML = label;
 
@@ -1539,25 +1621,34 @@ const ACCOUNTS = [
     const picked = BRANDS.filter(b => state.brands.has(b.id));
     const one = picked.length === 1 ? picked[0] : null;
 
+    /* Stats are only ever things I can back up: the brand's own stated
+       results, plus counts derived from the data itself. */
+    const stats = [];
+    picked.forEach(b => (b.highlights || []).forEach(h =>
+      stats.push({ v: h.v, l: h.l })));
+
     const views = workOn.reduce((s, w) => s + (w.views || 0), 0);
-    const grown = acctOn.reduce((s, a) => {
-      const d = a.series[a.series.length - 1] - a.series[0];
-      return s + (d > 0 ? d : 0);
-    }, 0);
+    if (views > 0) stats.push({ v: fmt(views), l: 'Views delivered' });
+
+    stats.push({ v: String(workOn.length), l: workOn.length === 1 ? 'Video' : 'Videos' });
+
+    const meta = one
+      ? [one.category, one.year].filter(Boolean).join(' · ')
+      : 'Combined view';
 
     box.innerHTML =
       '<div>' +
         '<div class="summary__marks">' + picked.slice(0, 5).map(b =>
           '<span class="mono-mark" style="background:' + b.color + '">' + esc(b.mark) + '</span>').join('') +
         '</div>' +
+        (one && one.role ? '<span class="summary__role">' + esc(one.role) + '</span>' : '') +
         '<h3>' + esc(one ? one.name : picked.length + ' partners selected') + '</h3>' +
         '<p>' + esc(one ? one.summary : picked.map(b => b.name).join(' · ')) + '</p>' +
-        '<p class="summary__meta">' + esc(one ? one.category + ' · ' + one.year : 'Combined view') + '</p>' +
+        (meta ? '<p class="summary__meta">' + esc(meta) + '</p>' : '') +
       '</div>' +
-      '<div class="summary__stats">' +
-        '<div class="mini"><div class="mini__v num">' + fmt(views) + '</div><div class="mini__l">Views delivered</div></div>' +
-        '<div class="mini"><div class="mini__v num">' + fmt(grown) + '</div><div class="mini__l">Followers added</div></div>' +
-        '<div class="mini"><div class="mini__v num">' + workOn.length + '</div><div class="mini__l">Pieces shipped</div></div>' +
+      '<div class="summary__stats">' + stats.slice(0, 4).map(s =>
+        '<div class="mini"><div class="mini__v num">' + esc(s.v) + '</div>' +
+        '<div class="mini__l">' + esc(s.l) + '</div></div>').join('') +
       '</div>';
     box.hidden = false;
     box.classList.add('is-in');
@@ -1593,28 +1684,39 @@ const ACCOUNTS = [
     const b = brandById(w.brand) || { name: '—', color: '#8e8e93', mark: '?' };
 
     const hero = $('#sheetHero');
-    hero.setAttribute('style', thumbStyle(b.color));
+    hero.setAttribute('style', thumbStyle(b.color, WORK.findIndex(x => x.id === w.id)));
     hero.innerHTML = w.thumb
       ? '<img src="' + esc(w.thumb) + '" alt="" style="width:100%;height:100%;object-fit:cover">'
       : '<span class="thumb__glyph">' + esc(b.mark) + '</span>';
 
-    $('#sheetEyebrow').textContent = b.name + ' · ' + (PLAT_NAME[w.platform] || w.platform) +
-      ' · ' + w.date + (w.duration ? ' · ' + w.duration : '');
+    const plat = PLAT_NAME[w.platform] || w.platform;
+    $('#sheetEyebrow').textContent =
+      [b.name, plat, w.date, w.duration].filter(Boolean).join(' · ');
     $('#sheetTitle').textContent = w.title;
-    $('#sheetDesc').textContent = w.desc || '';
+    $('#sheetDesc').textContent = w.desc || b.summary || '';
 
-    $('#sheetMetrics').innerHTML = [
-      ['Views', w.views], ['Likes', w.likes], ['Comments', w.comments], ['Shares', w.shares]
-    ].filter(m => m[1] !== undefined && m[1] !== null).map(m =>
+    const mx = [['Views', w.views], ['Likes', w.likes], ['Comments', w.comments], ['Shares', w.shares]]
+      .filter(m => m[1] !== undefined && m[1] !== null);
+    $('#sheetMetrics').innerHTML = mx.map(m =>
       '<div class="mini"><div class="mini__v num">' + fmt(m[1]) + '</div>' +
       '<div class="mini__l">' + m[0] + '</div></div>').join('');
+    $('#sheetMetrics').hidden = mx.length === 0;
 
-    $('#sheetRole').innerHTML = (w.role || []).map(r => '<li>' + esc(r) + '</li>').join('');
-    $('#sheetResult').innerHTML = (w.result || []).map(r => '<li>' + esc(r) + '</li>').join('');
+    /* fall back to the brand's own credits so a video with no bespoke
+       copy still says something accurate rather than showing an empty column */
+    const did = (w.role && w.role.length ? w.role : b.did) || [];
+    const res = (w.result && w.result.length ? w.result : b.result) || [];
+    $('#sheetRole').innerHTML = did.map(r => '<li>' + esc(r) + '</li>').join('');
+    $('#sheetResult').innerHTML = res.map(r => '<li>' + esc(r) + '</li>').join('');
+    $('#sheetDid').hidden = did.length === 0;
+    $('#sheetOut').hidden = res.length === 0;
 
     const link = $('#sheetLink');
-    if (w.href && w.href !== '#') { link.href = w.href; link.hidden = false; }
-    else { link.hidden = true; }
+    if (w.href && w.href !== '#') {
+      link.href = w.href;
+      link.textContent = 'Watch on ' + plat;
+      link.hidden = false;
+    } else { link.hidden = true; }
 
     const many = state.list.length > 1;
     $('#sheetPrev').hidden = !many;
@@ -1761,6 +1863,13 @@ const ACCOUNTS = [
     if (saved) document.documentElement.setAttribute('data-theme', saved);
   } catch (e) {}
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', paintThemeIcon);
+
+  /* the marquee tiling depends on viewport width — recompute when it changes */
+  let rzT;
+  window.addEventListener('resize', () => {
+    clearTimeout(rzT);
+    rzT = setTimeout(() => { if (booted) buildMarquee(); }, 220);
+  });
 
   if (gate()) boot();
 })();
