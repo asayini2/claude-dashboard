@@ -340,7 +340,7 @@ section[id], div[id], span[id] { scroll-margin-top: calc(var(--nav-h) + 8px); }
 .hero__cta { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 30px; }
 
 .stats {
-  display: grid; grid-template-columns: repeat(4, 1fr);
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 1px; margin-top: 68px;
   background: var(--line-soft);
   border-radius: var(--r-lg); overflow: hidden;
@@ -1014,6 +1014,8 @@ html.gated .gate { display: grid !important; }
   .nav__burger { display: grid; }
   .nav__tools { margin-left: auto; }
   .stats { grid-template-columns: repeat(2, 1fr); margin-top: 48px; }
+  /* an odd count leaves no orphan: the last tile takes the full row */
+  .stat:last-child:nth-child(odd) { grid-column: 1 / -1; }
   .grid, .acct-grid { grid-template-columns: 1fr; gap: 18px; }
   .summary { padding: 24px; }
   .summary__stats { grid-template-columns: repeat(3, 1fr); gap: 8px; }
@@ -1307,7 +1309,7 @@ const SITE = {
      `introMs`; the last one is left standing before the page reveals. */
   intro: {
     ms: 10000,
-    eyebrow: 'EasySlice · Argil · Manus · Knowlify · Hustl',
+    eyebrow: 'EasySlice · Argil · Manus · Knowlify · Brandon Hwang · Hustl',
     phrases: ['fostering distribution...'],
     cta: 'Down to my portfolio'
   },
@@ -1332,14 +1334,15 @@ const SITE = {
     { value: 20000000, display: '20M+', label: 'Total views' },
     { value: 2,        label: 'YC backed partners' },
     { value: 3000000,  display: '3M',  label: 'Views in a week' },
-    { value: 50000,    display: '50K', label: 'Followers in 2 months' }
+    { value: 50000,    display: '50K', label: 'Followers in 2 months' },
+    { value: 500000,   display: '500K', label: 'Views as videographer' }
   ],
 
   about: {
     title: 'I build personal brands for startups, then prove them in the numbers.',
     paragraphs: [
       'Started with founder led marketing for my own startup, Hustl, and it blew up.',
-      'I handle social media for EasySlice, and I run creator programs at Manus, Argil, and Knowlify, making the brand videos myself.',
+      'I handle social media for EasySlice, and I run creator programs at Manus, Argil, and Knowlify, making the brand videos myself. I also shoot as videographer for Brandon Hwang, an upcoming YouTuber formerly with MrBeast, Speed, and AMP.',
       'Creating and teaching go hand in hand. I build the system, prove it on camera, then coach the team to run it.',
       'I also host builder nights, hackathons, and networking mixers that have brought in over 1000 people, with partners like Google, NVIDIA, Base44, Lovable, Pieces, WorkOS and more.'
     ],
@@ -1419,6 +1422,14 @@ const BRANDS = [
     did: [],
     result: [] },
 
+  { id: 'brandon', name: 'Brandon Hwang', mark: 'BH', category: 'Upcoming YouTuber, formerly MrBeast, Speed, and AMP', year: '', color: '#FF9F0A',
+    wordmark: 'Brandon Hwang',
+    role: 'Videographer',
+    summary: 'Videographer for Brandon Hwang, an upcoming YouTuber formerly with MrBeast, Speed, and AMP. Three videos at 500K views and counting, plus a short that did 2.2M.',
+    highlights: [{ v: '2.2M', l: 'Views on the short' }, { v: '500K', l: 'Views across 3 videos' }],
+    did: ['Shot and edited the videos'],
+    result: ['500K views across 3 videos'] },
+
   { id: 'hustl', name: 'Hustl', mark: 'HU', category: 'First UGC project', year: '', color: '#FF453A',
     wordmark: 'Hustl',
     role: 'Founder Led Marketing',
@@ -1472,6 +1483,19 @@ const WORK = [
     desc: 'Coached the team and helped build the format this post runs on.',
     href: 'https://www.instagram.com/p/DWyxm0xDmJX/' },
 
+  /* ── Brandon Hwang ── */
+  { id: 'bh0', brand: 'brandon', contribution: 'video', platform: 'instagram', tall: true,
+    title: 'The short', views: 2200000,
+    desc: 'The short I helped with for this project. 2.2M views.',
+    href: 'https://www.instagram.com/reel/DT6TUQQDRHT/' },
+  { id: 'bh1', brand: 'brandon', contribution: 'video', platform: 'youtube',
+    title: 'Video 01', href: 'https://www.youtube.com/@brandonhwang1' },
+  { id: 'bh2', brand: 'brandon', contribution: 'video', platform: 'youtube',
+    title: 'Video 02', href: 'https://www.youtube.com/@brandonhwang1' },
+  { id: 'bh3', brand: 'brandon', contribution: 'video', platform: 'youtube',
+    title: 'Coming soon', duration: 'Coming soon',
+    desc: 'The third video is in production.' },
+
   /* ── Hustl ── */
   { id: 'hu1', brand: 'hustl', contribution: 'founder', platform: 'instagram', tall: true,
     title: 'Reel 01', href: 'https://www.instagram.com/reel/DNKDJgYNwjP/' },
@@ -1499,6 +1523,12 @@ const ACCOUNTS = [
     from: 0, to: 50000,
     series: [],                                    // ← add monthly numbers for a curve
     href: '' },                                    // ← TODO: the @ / profile URL
+
+  { id: 'ac-brandon', brand: 'brandon', handle: '@brandonhwang1', platform: 'youtube',
+    window: '', note: 'Videography',
+    from: null, to: null,
+    series: [],
+    href: 'https://www.youtube.com/@brandonhwang1' },
 
   { id: 'ac-hustl', brand: 'hustl', handle: '@joinhustl', platform: 'instagram',
     window: '', note: 'Founder led',
@@ -1561,6 +1591,12 @@ const ACCOUNTS = [
     const m = /instagram\.com\/(?:reel|p)\/([A-Za-z0-9_-]+)/.exec(href || '');
     return m ? 'https://www.instagram.com/p/' + m[1] + '/media/?size=l' : null;
   }
+  /* YouTube cover frames are served publicly, so a watch/shorts/youtu.be
+     link gets a real thumbnail with no help. Channel links have no frame. */
+  function ytMedia(href) {
+    const m = /(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/.exec(href || '');
+    return m ? 'https://img.youtube.com/vi/' + m[1] + '/hqdefault.jpg' : null;
+  }
   /* Layered attempts, best on top: a committed screenshot at
      assets/thumbs/<id>.jpg always wins; Instagram's own frame shows when
      Instagram allows it; the branded tile is the floor. Failed layers
@@ -1569,8 +1605,8 @@ const ACCOUNTS = [
     if (w.thumb) return '';
     let out = '';
     if (SITE.autoInstagramThumbs) {
-      const ig = igMedia(w.href);
-      if (ig) out += '<img class="thumb__auto" src="' + esc(ig) + '" alt="" loading="lazy" ' +
+      const net = igMedia(w.href) || ytMedia(w.href);
+      if (net) out += '<img class="thumb__auto" src="' + esc(net) + '" alt="" loading="lazy" ' +
         'referrerpolicy="no-referrer" onerror="this.remove()">';
     }
     out += '<img class="thumb__auto" src="assets/thumbs/' + esc(w.id) + '.jpg" alt="" ' +
@@ -1605,6 +1641,7 @@ const ACCOUNTS = [
     { id: 'founder',  label: 'Founder led' },
     { id: 'social',   label: 'Social media' },
     { id: 'program',  label: 'Creator programs' },
+    { id: 'video',    label: 'Videography' },
     { id: 'coaching', label: 'Coaching' }
   ];
 
